@@ -23,7 +23,7 @@ an elevated browser. No installed service or startup task is created.
 Reports are not saved by the EXE unless the user enables local history for that
 scan or exports/prints from the dashboard. History is stored under
 `%LOCALAPPDATA%\HealthScan\scan-history`. Imported reports stay in the page.
-The dashboard stores a theme preference in browser storage. Startup cleanup writes
+The dashboard keeps its theme choice in page memory; it does not persist report or theme data using localStorage. Startup cleanup writes
 `.reg` backups and recovery JSON under `%LOCALAPPDATA%\HealthScan\registry-backups`;
 these may contain private startup commands and the account SID. Backups cover the
 entire current-user Run key, including entries not selected for removal.

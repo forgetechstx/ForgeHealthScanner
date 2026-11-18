@@ -24,7 +24,7 @@ an elevated browser. No installed service or startup task is created.
 Reports are not saved by the EXE unless the user enables local history for that
 scan or exports/prints from the dashboard. History is stored under
 `%LOCALAPPDATA%\HealthScan\scan-history`. Imported reports stay in the page.
-The dashboard stores a theme preference in browser storage. Startup cleanup writes
+The dashboard keeps its theme choice in page memory; it does not persist report or theme data using localStorage. Startup cleanup writes
 `.reg` backups and recovery JSON under `%LOCALAPPDATA%\HealthScan\registry-backups`;
 these may contain private startup commands and the account SID. Backups cover the
 entire current-user Run key, including entries not selected for removal.
@@ -59,4 +59,4 @@ is imposed. Deleting the EXE does not remove history, backups, browser data or
 exported files. Preserve recovery files you need before deletion. OS/browser/cloud
 copies are managed through those products. No existing user data is migrated or
 deleted by the publication changes.
-</pre></main><footer>Maintained by <a href="https://github.com/forgetechstx">forgetechstx</a> · MIT licensed · No SignPath approval or sponsorship claimed.</footer></html>
+</pre></main><footer>Maintained by <a href="https://github.com/forgetechstx">forgetechstx</a> Â· MIT licensed Â· No SignPath approval or sponsorship claimed.</footer></html>

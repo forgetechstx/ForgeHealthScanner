@@ -49,11 +49,11 @@ if ($git -and (Test-Path -LiteralPath (Join-Path $root '.git'))) {
     Push-Location -LiteralPath $root
     try {
         foreach ($name in 'health-report.json', 'health-report-2026-11-10.json', 'health-report-2026-11-10 (1).json',
-                          'DEMO-health-report.json', 'ComputerHealth-20261110-120000.json', 'latest-report.js', 'reports/x.json') {
+                          'DEMO-health-report.json', 'ComputerHealth-20261110-120000.json', 'latest-report.js', 'reports/x.json', 'HealthScan.exe', 'dist/release.zip', 'test.pfx', 'scan-history/x.json', 'registry-backups/x.reg') {
             & git check-ignore -q --no-index -- $name
             Assert ($LASTEXITCODE -eq 0) ".gitignore does not ignore the report name '$name'."
         }
-        foreach ($name in 'index.html', 'Collect-Health.ps1', 'HealthScan.exe', 'build/Test-Exe.ps1') {
+        foreach ($name in 'index.html', 'Collect-Health.ps1', 'build/Test-Exe.ps1') {
             & git check-ignore -q --no-index -- $name
             Assert ($LASTEXITCODE -eq 1) ".gitignore wrongly ignores '$name'."
         }

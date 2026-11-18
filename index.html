@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>HealthScan · Your system, at a glance</title>
+<style>
+:root{font-family:"Segoe UI Variable","Segoe UI",sans-serif;color:#183b32;background:#f4f6f3;font-synthesis:none;color-scheme:light;--bg:#f4f6f3;--surface:#fff;--soft:#f8faf7;--text:#183b32;--muted:#53665b;--line:#e1e8e0;--field:#7d8f83;--accent:#16724f;--green:#e8f3e9;--amber:#865710;--yellow:#fff4df;--blue:#4f7189;--bluebg:#edf3f8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0}button,input,textarea{font:inherit;color:var(--text)}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default;opacity:.42}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.sidebar :focus-visible{outline-color:#66b58a}.nav-button:focus-visible,.filter:focus-visible{outline-offset:-3px}.nav-button.active:focus-visible{outline-color:#183d2d}.about-dialog :focus-visible{outline-color:#137957}::placeholder{color:var(--muted);opacity:1}svg{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}h1,h2,h3,p{margin:0}.hidden{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip{position:fixed;top:-70px;left:20px;z-index:10;background:var(--surface);padding:12px}.skip:focus{top:12px}.app{display:grid;grid-template-columns:226px minmax(0,1fr);min-height:100vh}.sidebar{background:#113b30;color:#d6e7df;padding:33px 23px 24px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;min-height:620px}.brand{display:flex;gap:11px;align-items:center;font-size:22px;font-weight:680;letter-spacing:-.8px}.brand-mark{display:grid;place-items:center;background:#c6f0cc;color:#144f35;border-radius:12px;width:38px;height:40px}.brand-mark svg{width:27px;height:27px;stroke-width:2}.brand small{display:block;letter-spacing:2px;font-size:9px;font-weight:600;color:#98b9a7;margin-top:3px}.nav-label{color:#8cb39e;font-size:10px;font-weight:650;letter-spacing:1.7px;margin:44px 12px 14px}.nav-list{display:grid;gap:5px}.nav-button{border:0;display:flex;align-items:center;gap:12px;background:transparent;color:#b9d0c2;text-align:left;border-radius:9px;padding:12px;font-size:13px;font-weight:550;min-height:44px;transition:background .15s,color .15s}.nav-button:hover{background:#ffffff09;color:#fff}.nav-button.active{background:#d1edce;color:#183d2d}.nav-count{margin-left:auto;font-size:11px;opacity:.75}.sidebar-bottom{margin-top:auto;padding-top:28px}.privacy-card{background:#ffffff06;border:1px solid #ffffff13;border-radius:12px;padding:16px}.privacy-card svg{color:#b6e3bd;margin-bottom:10px}.privacy-card b{display:block;font-size:12px;color:#d8eadc}.privacy-card p{font-size:11px;line-height:1.7;color:#9cbdab;margin-top:5px}.version{display:flex;justify-content:space-between;color:#91b19d;font-size:10px;margin-top:20px;letter-spacing:.4px}.workspace{min-width:0}.topbar{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 42px;background:var(--surface);gap:16px}.breadcrumb{display:flex;align-items:center;gap:13px;font-size:12px;color:var(--muted)}.breadcrumb strong{font-weight:600;color:var(--text)}.top-tools{display:flex;align-items:center;gap:16px}.local-pill{font-size:11px;display:flex;align-items:center;gap:7px;color:var(--muted)}.dot{height:6px;width:6px;border-radius:50%;background:#449768;display:inline-block}.icon-button{display:grid;place-items:center;width:35px;height:35px;border:1px solid var(--line);background:var(--surface);border-radius:9px}.icon-button:hover{background:var(--green)}main{max-width:1460px;padding:35px 42px 24px;margin:0 auto}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:27px}.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted)}h1{font-size:34px;line-height:1.16;letter-spacing:-1.35px;font-weight:650;margin-top:8px}.subheading{font-size:13px;color:var(--muted);line-height:1.65;margin-top:10px}.actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.button{border:1px solid var(--line);background:var(--surface);padding:10px 15px;min-height:40px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s}.button:hover{background:var(--soft);border-color:#abc4af}.button.primary{background:var(--accent);border-color:var(--accent);color:#fff}.button.primary:hover{background:#115b40}.button svg{width:16px;height:16px}.button.subtle{background:transparent}.status-banner{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--soft);padding:12px 15px;border-radius:9px;margin-bottom:20px;font-size:11px;line-height:1.6;color:var(--muted)}.status-banner>svg{width:17px;height:17px;color:var(--accent)}.status-banner.warning{background:var(--yellow);border-color:#e7c88e;color:var(--amber)}.status-banner.warning>svg{color:var(--amber)}#notice{flex:1}.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.65px;border-radius:5px;white-space:nowrap;background:var(--green);color:var(--accent)}.status-banner.warning .pill{background:#f6e4bd;color:var(--amber)}.error{font-size:12px;color:#ae4738;line-height:1.6}.error:not(:empty){padding:12px 15px;border:1px solid #dcb8b0;background:#fff2ef;border-radius:8px;margin-bottom:18px}.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 286px;gap:18px}.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px #183b3205}.health-card{display:flex;align-items:center;gap:34px;padding:32px;position:relative;overflow:hidden;min-height:234px;background:radial-gradient(ellipse at 10% 120%,#e5f1df88,transparent 70%),var(--surface)}.ring{--progress:0%;width:154px;height:154px;border-radius:50%;background:conic-gradient(from -90deg,var(--accent) var(--progress),var(--line) 0);padding:9px;flex:0 0 auto}.ring-inner{background:var(--surface);height:100%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid var(--soft)}.ring-value{font-size:41px;font-weight:650;letter-spacing:-2px;line-height:1}.ring-value small{font-size:17px;letter-spacing:-.5px;color:var(--muted);font-weight:500}.ring-label{font-size:9px;letter-spacing:1.3px;font-weight:650;color:var(--muted);margin-top:11px}.health-copy{min-width:0}.health-copy .eyebrow{font-size:9px;color:var(--accent);letter-spacing:1.6px}.health-copy h2{font-size:27px;line-height:1.22;letter-spacing:-.85px;margin-top:9px;font-weight:620;max-width:390px}.health-copy p{font-size:12px;line-height:1.8;color:var(--muted);margin-top:12px;max-width:390px}.age-line{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);margin-top:16px}.age-line svg{width:13px;height:13px}.device-card{padding:23px;display:flex;flex-direction:column;justify-content:center}.device-top{display:flex;align-items:center;justify-content:space-between}.device-icon{background:var(--soft);border:1px solid var(--line);border-radius:10px;width:41px;height:41px;display:grid;place-items:center;color:var(--muted)}.device-card h3{font-size:14px;letter-spacing:-.2px;overflow-wrap:anywhere;margin-top:17px}.device-card>p{font-size:11px;color:var(--muted);margin-top:6px}.device-meta{border-top:1px solid var(--line);margin-top:18px;padding-top:13px;display:flex;justify-content:space-between;gap:12px;font-size:10px;color:var(--muted)}.device-meta b{font-weight:600;color:var(--text);text-align:right}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:16px}.stat{padding:17px 20px;display:flex;align-items:center;gap:13px;text-align:left}.stat:hover{border-color:#a7c5ae}.stat.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.stat-icon{width:35px;height:35px;border-radius:10px;display:grid;place-items:center}.pass{background:var(--green);color:var(--accent)}.warning{background:var(--yellow);color:var(--amber)}.unknown,.info{background:var(--bluebg);color:var(--blue)}.stat strong{font-size:24px;font-weight:620;letter-spacing:-.7px;line-height:1}.stat .label{display:block;font-size:10px;color:var(--muted);margin-top:6px}.stat .stat-arrow{margin-left:auto;width:15px;height:15px;color:#9aab9e}.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 286px;gap:18px;margin-top:31px;align-items:start}.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;gap:12px}.section-title{font-size:17px;letter-spacing:-.4px;font-weight:630}.count{font-size:10px;font-weight:600;background:var(--line);color:var(--muted);padding:3px 7px;border-radius:5px;margin-left:7px;vertical-align:middle}.result-meta{font-size:10px;color:var(--muted)}.results-card{overflow:hidden}.result-tools{padding:17px 19px 0}.search-wrap{position:relative;display:flex;align-items:center}.search-wrap>svg{position:absolute;left:12px;width:16px;height:16px;color:var(--muted);pointer-events:none}input[type=search]{width:100%;border:1px solid var(--field);background:var(--soft);border-radius:7px;padding:11px 12px 11px 36px;font-size:12px;appearance:none;min-width:0}.filters{display:flex;gap:5px;border-bottom:1px solid var(--line);margin-top:9px;overflow-x:auto}.filter{padding:13px 6px 12px;white-space:nowrap;font-size:10px;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);font-weight:600}.filter.active{color:var(--accent);border-bottom-color:var(--accent)}#checks{padding:0 20px}.group-label{font-size:9px;letter-spacing:1.35px;font-weight:650;text-transform:uppercase;color:var(--muted);padding-top:20px;padding-bottom:2px}.check{padding:19px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:12px;align-items:start;scroll-margin-top:24px}.check:last-child{border-bottom:0}.check-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center}.check-icon svg{width:16px;height:16px}.check-content{min-width:0}.check-title{font-size:12px;line-height:1.6;font-weight:630;display:block}.check-category{font-size:9px;color:var(--muted);margin-top:3px}.check-detail{font-size:11px;color:var(--muted);line-height:1.75;white-space:pre-line;overflow-wrap:anywhere;margin-top:8px}.check>.pill{font-size:8px;letter-spacing:.1px;padding:4px 7px;margin-top:2px;text-transform:uppercase}.next-step{margin-top:12px;border-left:2px solid #b6cdb6;padding-left:11px}.next-step b{font-size:9px;color:var(--text);font-weight:650}.next-step p{font-size:11px;line-height:1.75;color:var(--muted);white-space:pre-line;overflow-wrap:anywhere;margin-top:3px}.fix-link{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:650;color:var(--accent);text-decoration:none;margin-top:9px}.fix-link svg{width:12px;height:12px}.fix-link:hover{text-decoration:underline}.check details{margin-top:9px}.check details summary{cursor:pointer;font-size:10px;color:var(--accent);padding:3px 0}.check details .next-step{margin-top:7px}.passed-group{padding:0 0 15px}.passed-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:18px 0 4px;font-size:11px;font-weight:600;color:var(--accent)}.passed-group>summary::-webkit-details-marker{display:none}.passed-group>summary .chevron{margin-left:auto;width:14px;height:14px;transition:transform .15s}.passed-group[open]>summary .chevron{transform:rotate(90deg)}.passed-group>summary>svg:first-child{width:15px;height:15px}.empty{padding:42px 20px;text-align:center;color:var(--muted)}.empty-symbol{display:grid;place-items:center;margin:0 auto 13px;width:48px;height:48px;border:1px solid var(--line);background:var(--soft);border-radius:14px}.empty b{font-size:13px;color:var(--text);display:block}.empty p{font-size:11px;line-height:1.8;margin:8px auto 0;max-width:300px}.result-footer{border-top:1px solid var(--line);padding:13px 19px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:7px}.result-footer>svg{width:13px;height:13px}.right-column{display:grid;gap:17px;padding-top:34px}.side-card{padding:23px}.side-card h3{font-size:14px;font-weight:620;letter-spacing:-.3px}.side-card .side-description{font-size:11px;line-height:1.75;color:var(--muted);margin-top:8px}.plan-list{display:grid;margin-top:17px}.plan-item{display:flex;gap:10px;padding:13px 0;border-top:1px solid var(--line);text-align:left;border-left:0;border-right:0;border-bottom:0;background:transparent}.plan-number{font-size:10px;color:var(--accent);background:var(--green);width:22px;height:22px;display:grid;place-items:center;border-radius:50%;flex-shrink:0}.plan-item strong{font-size:11px;line-height:1.6;display:block;font-weight:600}.plan-item small{font-size:10px;color:var(--muted);display:block;margin-top:4px;line-height:1.7}.plan-item:hover strong{color:var(--accent)}.plan-note{font-size:10px;color:var(--muted);line-height:1.7;margin-top:12px}.legend{display:grid;gap:15px;margin-top:19px}.legend-row{display:flex;gap:10px;align-items:flex-start}.legend-dot{height:7px;width:7px;border-radius:50%;margin-top:4px;flex-shrink:0}.legend-row b{font-size:10px;display:block;font-weight:650}.legend-row p{font-size:10px;color:var(--muted);line-height:1.6;margin-top:3px}.report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.text-button{padding:7px 0;background:none;border:0;color:var(--muted);font-size:10px;text-decoration:underline;text-underline-offset:3px}.report-actions .button{font-size:10px;padding:9px 11px;min-height:34px}.onboarding{margin-top:18px;padding:25px}.onboarding-heading{display:flex;justify-content:space-between;gap:18px;align-items:center}.onboarding h2{font-size:18px;letter-spacing:-.5px;margin-top:7px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:25px 0 21px}.step{display:flex;gap:12px;font-size:11px;line-height:1.75}.step-number{font-size:10px;width:25px;height:25px;flex-shrink:0;display:grid;place-items:center;background:var(--green);color:var(--accent);border-radius:50%}.step b{display:block;font-size:11px;font-weight:650}.step span{display:block;margin-top:5px;color:var(--muted)}.onboard-note{color:var(--muted);font-size:10px;border-top:1px solid var(--line);padding-top:15px;line-height:1.7}.footer{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-top:1px solid var(--line);margin-top:32px;padding-top:18px;font-size:9px;line-height:1.7;color:var(--muted)}.footer p{max-width:650px}.footer span{white-space:nowrap}dialog{color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;width:min(540px,calc(100% - 32px));max-height:85vh;box-shadow:0 20px 90px #102b3340}dialog::backdrop{background:#102b3366;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}dialog h2{font-size:23px;letter-spacing:-.7px}dialog p{font-size:12px;color:var(--muted);line-height:1.85;margin:13px 0}dialog code{display:block;padding:13px;background:var(--soft);border:1px solid var(--line);border-radius:7px;font:11px/1.7 Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}textarea{width:100%;min-height:180px;border:1px solid var(--field);border-radius:9px;background:var(--soft);padding:13px;font:11px/1.6 Consolas,monospace;resize:vertical;margin-bottom:12px}dialog .actions{margin-top:17px}.print-heading{display:none}
+[data-theme=dark]{color-scheme:dark;--bg:#14231e;--surface:#1a2d25;--soft:#20342b;--text:#e0eee3;--muted:#a2b6a7;--line:#34483b;--field:#7a937f;--accent:#a7dcad;--green:#2b4733;--amber:#e4bd76;--yellow:#443925;--blue:#b2ccd9;--bluebg:#293c42;background:var(--bg);color:var(--text)}[data-theme=dark] .sidebar{background:#0e241b}[data-theme=dark] .health-card{background:radial-gradient(ellipse at 10% 120%,#35583b55,transparent 70%),var(--surface)}[data-theme=dark] .button.primary{background:#b3ddb6;color:#173b24;border-color:#b3ddb6}[data-theme=dark] .button.primary:hover{background:#c9ebc9}@media screen{[data-theme=dark] .status-banner.warning .pill{background:#57472c;color:#edca88}[data-theme=dark] .error:not(:empty){background:#452a24;color:#f1b6a5;border-color:#825c50}}
+@media(min-width:1600px){main{padding-top:44px}.health-card{min-height:260px;gap:40px}.health-copy h2{font-size:31px}.ring{width:166px;height:166px}}
+@media(max-width:1200px){.app{grid-template-columns:195px minmax(0,1fr)}.sidebar{padding:28px 16px}.topbar{padding:0 26px}main{padding:30px 26px 24px}.hero-grid,.content-grid{grid-template-columns:minmax(0,1fr) 249px}.health-card{padding:25px;gap:23px}.ring{width:128px;height:128px}.ring-value{font-size:34px}.health-copy h2{font-size:23px}.stat{padding:16px 14px;gap:10px}.stat .stat-arrow{display:none}.page-heading{align-items:flex-start}h1{font-size:30px}.page-heading .actions{justify-content:flex-end}.side-card{padding:20px}}
+@media(max-width:1000px){.app{grid-template-columns:182px minmax(0,1fr)}.hero-grid{grid-template-columns:1fr}.device-card{display:none}.content-grid{grid-template-columns:1fr}.right-column{padding-top:0;grid-template-columns:1fr 1fr}.health-card{min-height:220px;gap:30px}.ring{width:146px;height:146px}.page-heading{flex-direction:column;align-items:flex-start;gap:18px}.stats{gap:9px}.stat{display:block}.stat-icon{float:right;width:28px;height:28px}.stat-icon svg{width:16px;height:16px}.steps{grid-template-columns:1fr;gap:18px}.local-pill{display:none}}
+@media(max-width:700px){.app{display:block}.sidebar{height:auto;min-height:0;padding:18px 18px 0;position:static}.brand{font-size:20px}.brand-mark{width:32px;height:34px}.brand small{font-size:8px}.nav-label,.sidebar-bottom,.sidebar-guide{display:none}.nav-list{display:flex;overflow-x:auto;gap:5px;margin-top:20px;padding-bottom:13px}.nav-button{padding:9px 11px;font-size:10px;white-space:nowrap;min-height:36px}.nav-button svg{width:15px;height:15px}.nav-count{display:none}.topbar{height:55px;padding:0 19px}.breadcrumb{font-size:10px;gap:8px}.top-tools{gap:8px}main{padding:25px 18px 20px}h1{font-size:30px}.subheading{font-size:12px}.page-heading .actions{justify-content:flex-start}.status-banner{align-items:flex-start;flex-wrap:wrap;gap:8px}.status-banner>svg{margin-top:2px}.status-banner #notice{flex-basis:80%}.status-banner .pill{margin-left:25px}.hero-grid{gap:0}.health-card{padding:25px 20px;gap:22px;min-height:200px}.health-copy h2{font-size:22px}.health-copy p{font-size:11px}.ring{width:111px;height:111px;padding:7px}.ring-inner{border-width:4px}.ring-value{font-size:31px}.ring-value small{font-size:13px}.ring-label{font-size:7px;letter-spacing:.7px;margin-top:7px}.health-copy .eyebrow{font-size:8px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat{display:flex;padding:16px}.stat-icon{float:none;width:31px;height:31px}.stat strong{font-size:22px}.content-grid{margin-top:25px}.result-tools{padding:15px 15px 0}.filters{gap:4px}#checks{padding:0 15px}.check{gap:9px;grid-template-columns:28px minmax(0,1fr)}.check>.pill{grid-column:2;grid-row:2;justify-self:start;margin-top:-2px}.check-icon{width:27px;height:27px}.check-title{font-size:12px}.right-column{grid-template-columns:1fr}.onboarding-heading{align-items:flex-start;flex-direction:column}.footer{flex-direction:column;gap:9px;margin-top:25px}.onboarding{padding:22px}.result-meta{font-size:9px}.age-line{font-size:9px}.section-heading{align-items:flex-start}}
+@media(max-width:390px){.health-card{flex-direction:column;text-align:center;gap:19px}.age-line{justify-content:center}.ring{width:130px;height:130px}.health-copy h2{font-size:24px}.ring-value{font-size:36px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+@media print{html,html[data-theme]{color-scheme:light!important;background:#fff!important;color:#183b32!important;--surface:#fff;--soft:#f7f9f6;--text:#183b32;--muted:#526558;--line:#dbe4d8;--accent:#16724f;--green:#e8f3e9;--amber:#865710;--yellow:#fff4df;--blue:#4f7189;--bluebg:#edf3f8}.sidebar,.topbar,.page-heading .actions,.result-tools,.right-column,.report-actions,.onboarding,.skip,.fix-link,.text-button,dialog{display:none!important}.app{display:block}main{padding:0;max-width:none}.hero-grid{grid-template-columns:1fr 240px}.device-card{display:flex}.health-card{min-height:180px;background:#fff!important}.content-grid{display:block;margin-top:22px}.card{box-shadow:none;break-inside:avoid}.results-card{break-inside:auto}.check{break-inside:avoid}.stats{grid-template-columns:repeat(4,1fr)}.stat{display:flex}.stat-icon{float:none}.status-banner{margin-top:18px}#checks{padding:0 16px}.passed-group>summary{display:none}.print-heading{display:block;font-size:10px;color:#53665b;margin-bottom:10px}.footer{font-size:9px}.page-heading{margin-bottom:20px}.result-meta{display:none}body{background:white;padding:12mm;-webkit-box-decoration-break:clone;box-decoration-break:clone}a{text-decoration:none}}
+/* A zero page margin leaves Chromium no room for its header and footer, which print the page address (a local path that can include the Windows user name). */
+@page{margin:0}
+.comparison{margin-top:18px;padding:24px}.comparison-head{display:flex;align-items:center;justify-content:space-between;gap:24px}.comparison h2{font-size:19px;letter-spacing:-.5px;margin-top:7px}.comparison-meta{font-size:11px;color:var(--muted);line-height:1.8;margin-top:8px;overflow-wrap:anywhere}.comparison .actions{flex-shrink:0;max-width:300px;justify-content:flex-end}.comparison .error:not(:empty){margin:16px 0 0}.comparison-summary{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}.delta-stat{display:flex;align-items:baseline;gap:7px;padding:10px 13px;border-radius:8px;background:var(--soft);border:1px solid var(--line);font-size:10px;color:var(--muted)}.delta-stat b{font-size:20px;font-weight:620;color:var(--text)}.delta-stat.improved b{color:var(--accent)}.delta-stat.worsened b{color:var(--amber)}.comparison-note{font-size:10px;line-height:1.75;color:var(--muted);margin-bottom:16px}.comparison-row{border-top:1px solid var(--line)}.comparison-row>summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0;cursor:pointer;list-style:none}.comparison-row>summary::-webkit-details-marker{display:none}.comparison-row>summary b{font-size:12px;font-weight:620;display:block;overflow-wrap:anywhere}.comparison-row>summary small{font-size:10px;color:var(--muted);display:block;margin-top:5px}.delta-label{display:flex;align-items:center;gap:10px;flex-shrink:0}.delta-label svg{width:13px;height:13px;transition:transform .15s}.comparison-row[open]>summary .delta-label svg{transform:rotate(90deg)}.delta-pill{font-size:9px;white-space:nowrap;border-radius:5px;padding:5px 8px;color:var(--muted);background:var(--soft)}.delta-pill.improved{background:var(--green);color:var(--accent)}.delta-pill.worsened{background:var(--yellow);color:var(--amber)}.delta-pill.changed,.delta-pill.added,.delta-pill.removed{background:var(--bluebg);color:var(--blue)}.comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:0 0 18px}.comparison-snapshot{border:1px solid var(--line);border-radius:9px;background:var(--soft);padding:15px;min-width:0}.comparison-snapshot .eyebrow{font-size:9px;margin-bottom:10px}.comparison-snapshot p{font-size:11px;line-height:1.8;white-space:pre-line;overflow-wrap:anywhere;color:var(--muted);margin-top:10px}.comparison-snapshot .comparison-action{font-size:10px;border-top:1px solid var(--line);padding-top:10px}.comparison-unchanged>summary{cursor:pointer;color:var(--muted);font-size:11px;font-weight:600;padding:14px 0}.comparison-empty{font-size:12px;line-height:1.8;color:var(--muted);padding:8px 0 13px}
+@media(max-width:1000px){.comparison-head{align-items:flex-start;flex-direction:column;gap:15px}.comparison .actions{max-width:none;justify-content:flex-start}}
+@media(max-width:700px){.comparison{padding:20px}.comparison-pair{grid-template-columns:1fr}.comparison-row>summary{gap:10px;align-items:flex-start}.delta-label{gap:5px}.delta-pill{font-size:8px}.comparison-summary{gap:7px}.delta-stat{padding:8px 10px;font-size:9px}}
+@media print{.comparison{break-inside:auto}.comparison .actions,.comparison-row .delta-label svg{display:none!important}.comparison-row{break-inside:avoid}.comparison-pair{grid-template-columns:1fr 1fr}.comparison-head{display:block}.comparison-unchanged>summary{display:none}}
+.search-hint{font-size:10px;color:var(--muted);margin:9px 0 0;line-height:1.5}.search-hint kbd{font:inherit;font-weight:650;padding:2px 5px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}@media print{.search-hint{display:none}}
+@media(forced-colors:active){.filter{border-bottom-color:Canvas}.nav-button[aria-pressed="true"],.filter[aria-pressed="true"],.stat[aria-pressed="true"]{forced-color-adjust:none;background:Highlight;color:HighlightText;border-color:Highlight}.stat[aria-pressed="true"] .stat-icon,.stat[aria-pressed="true"] .label,.stat[aria-pressed="true"] .stat-arrow{background:transparent;color:HighlightText}.nav-button[aria-pressed="true"]:focus-visible,.filter[aria-pressed="true"]:focus-visible{outline-color:HighlightText}.stat[aria-pressed="true"]:focus-visible{outline-color:CanvasText}}
+.about-dialog{max-width:620px}.about-brand{display:flex;gap:20px;align-items:center;margin-bottom:24px}.about-mark{width:64px;height:64px;border-radius:15px;background:#173c30;color:#c6f0cc;display:grid;place-items:center;flex-shrink:0}.about-mark svg{width:37px;height:37px}.about-brand h2{font-size:27px}.about-brand p{margin:5px 0 0}.about-privacy{color:var(--accent);font-size:13px!important}.about-shortcuts{display:grid;grid-template-columns:140px 1fr;gap:11px 20px;font-size:12px;line-height:1.5;margin:22px 0}.about-shortcuts dt{font-weight:700}.about-shortcuts dd{margin:0;color:var(--muted)}.about-footer{border-top:1px solid var(--line);padding-top:15px}.about-footer p{font-size:11px}.about-footer .actions{justify-content:space-between}@media(max-width:500px){.about-shortcuts{grid-template-columns:95px 1fr}.about-brand h2{font-size:21px}}
+.about-dialog{width:min(638px,calc(100% - 32px));max-width:638px;padding:0;border-radius:7px;background:#f7f6f2;color:#203246;box-shadow:0 18px 65px #102b3340}.about-dialog .about-titlebar{min-height:37px;margin:0;padding:7px 10px;background:#eaf3f7;color:#172d34;display:flex;align-items:center;justify-content:space-between}.about-titlebar span{font-size:12px;font-weight:500}.about-titlebar .icon-button{width:27px;height:27px;background:transparent;border:0;border-radius:4px;color:#172d34}.about-titlebar .icon-button:hover{background:#d8e9ed}.about-body{padding:29px 30px 25px}.about-dialog .about-brand{gap:20px;margin:0 0 18px}.about-dialog .about-mark{width:64px;height:64px;border-radius:15px;background:#172f34;color:#e4f4ea}.about-dialog .about-brand h2{font-size:28px;line-height:1.15;letter-spacing:-.5px;color:#203246}.about-dialog .about-brand p{font-size:12px;color:#5d7770;margin:5px 0 0;line-height:1.45}.about-dialog .about-brand i{color:#087356}.about-dialog .about-privacy{color:#087356;font-size:13px!important;margin:0 0 15px;line-height:1.6}.about-dialog .about-shortcuts{grid-template-columns:140px 1fr;gap:6px 7px;font-size:12px;line-height:1.35;margin:0 0 20px}.about-dialog .about-shortcuts dt{color:#203246}.about-dialog .about-shortcuts dd{color:#203246}.about-dialog .about-footer{border:0;padding:0}.about-dialog .about-footer p{font-size:11px;line-height:1.5;color:#607a73;margin:0 0 15px}.about-dialog .about-footer .actions{justify-content:space-between;margin-top:0}.about-dialog .about-footer .button{border:0;border-radius:0;background:#e9edec;color:#203246;min-height:36px;padding:9px 17px}.about-dialog .about-footer .button.primary{background:#137957;color:#fff;min-width:103px}.about-dialog .about-footer .button:hover{filter:brightness(.95)}@media(max-width:500px){.about-body{padding:22px 20px}.about-dialog .about-shortcuts{grid-template-columns:105px 1fr}.about-dialog .about-brand h2{font-size:21px}}
+</style>
+</head><body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><path d="m5 5-3 10v4h20v-4L19 5H5Z"/><path d="M2 15h20M16 18h.01M19 18h.01"/></symbol>
+<symbol id="i-system" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M8 10h2l1-2 2 5 1-3h2"/></symbol>
+<symbol id="i-update" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 6.2A8 8 0 0 1 20 12M4 12a8 8 0 0 0 13.8 5.8"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1ZM12 5v15"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3ZM12 9v5M12 17h.01"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M12 17h.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m-4 4 4-4 4 4M4 16v5h16v-5"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+<symbol id="i-print" viewBox="0 0 24 24"><path d="M6 8V3h12v5M6 17H3V9h18v8h-3M6 14h12v7H6ZM17 11h1"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to dashboard</a>
+<div class="app"><aside class="sidebar">
+<div class="brand"><span class="brand-mark"><svg><use href="#i-pulse"/></svg></span><div>HealthScan<small>SYSTEM WELLNESS</small></div></div>
+<div class="nav-label">WORKSPACE</div><nav class="nav-list" aria-label="Check categories">
+<button class="nav-button active" data-category="all" aria-pressed="true"><svg><use href="#i-grid"/></svg>Overview<span class="nav-count" id="nav-all">—</span></button>
+<button class="nav-button" data-category="protection" aria-pressed="false"><svg><use href="#i-shield"/></svg>Protection<span class="nav-count" id="nav-protection">—</span></button>
+<button class="nav-button" data-category="storage" aria-pressed="false"><svg><use href="#i-disk"/></svg>Storage<span class="nav-count" id="nav-storage">—</span></button>
+<button class="nav-button" data-category="system" aria-pressed="false"><svg><use href="#i-system"/></svg>System<span class="nav-count" id="nav-system">—</span></button>
+<button class="nav-button" data-category="updates" aria-pressed="false"><svg><use href="#i-update"/></svg>Updates<span class="nav-count" id="nav-updates">—</span></button>
+</nav><div class="sidebar-guide"><div class="nav-label">RESOURCES</div><button class="nav-button" id="guideNav"><svg><use href="#i-book"/></svg>Scan guide</button></div>
+<div class="sidebar-bottom"><div class="privacy-card"><svg><use href="#i-lock"/></svg><b>Private by design.</b><p>Your report stays on this PC.<br>No accounts. No uploads.</p></div><div class="version"><span>WINDOWS EDITION</span><span>v1.5.1</span></div></div>
+</aside><div class="workspace">
+<header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Overview</strong></div><div class="top-tools"><span class="local-pill"><span class="dot"></span>All data stays local</span><button class="icon-button" id="guideQuick" aria-label="Open scan guide" title="Open scan guide"><svg><use href="#i-book"/></svg></button><button class="icon-button" id="theme" aria-label="Switch to dark mode" title="Switch to dark mode"><svg><use href="#i-moon"/></svg></button></div></header>
+<main id="main">
+<div class="print-heading">HEALTHSCAN · LOCAL SYSTEM HEALTH REPORT</div>
+<div class="page-heading"><div><div class="eyebrow">A little clarity goes a long way</div><h1>Your system, at a glance.</h1><p class="subheading">A clearer view of your PC. A simple plan for what comes next.</p></div><div class="actions"><button class="button subtle" id="demo">Explore demo</button><button class="button primary" id="import"><svg><use href="#i-upload"/></svg>Import report</button><input type="file" id="file" accept=".json,application/json" hidden></div></div>
+<div class="status-banner" id="banner"><svg aria-hidden="true"><use href="#i-info"/></svg><span id="notice">Load a report to see your computer’s health.</span><span class="pill" id="mode">READY WHEN YOU ARE</span></div><div class="error" role="alert" id="error"></div><div class="sr-only" role="status" id="announce"></div>
+<section class="hero-grid" id="overview" aria-label="Health overview">
+<div class="card health-card"><div class="ring" id="ring" role="img" aria-label="No scored checks"><div class="ring-inner"><div class="ring-value" id="score">—</div><span class="ring-label">CHECKS PASSED</span></div></div><div class="health-copy"><div class="eyebrow" id="overviewLabel">YOUR HEALTH SNAPSHOT</div><h2 id="headline">Good health starts with a little insight.</h2><p id="summary">Run a local scan or import a report to see what’s working well and what needs a closer look.</p><div class="age-line"><svg><use href="#i-clock"/></svg><span id="timestamp">No scan collected yet</span></div></div></div>
+<div class="card device-card"><div class="device-top"><span class="device-icon"><svg><use href="#i-system"/></svg></span><span class="eyebrow">THIS REPORT</span></div><h3 id="device">Your Windows PC</h3><p id="os">Waiting for a report</p><div class="device-meta"><span>Report source</span><b id="source">Not connected</b></div><div class="device-meta" style="margin-top:10px;padding-top:10px"><span>Snapshot age</span><b id="reportAge">—</b></div></div>
+</section>
+<section class="stats" aria-label="Filter by result">
+<button class="card stat" data-stat="pass" aria-pressed="false"><span class="stat-icon pass"><svg><use href="#i-check"/></svg></span><span><strong id="passes">—</strong><span class="label">Passed checks</span></span><svg class="stat-arrow"><use href="#i-arrow"/></svg></button>
+<button class="card stat" data-stat="warning" aria-pressed="false"><span class="stat-icon warning"><svg><use href="#i-alert"/></svg></span><span><strong id="warnings">—</strong><span class="label">Need attention</span></span><svg class="stat-arrow"><use href="#i-arrow"/></svg></button>
+<button class="card stat" data-stat="unknown" aria-pressed="false"><span class="stat-icon unknown"><svg><use href="#i-help"/></svg></span><span><strong id="unknowns">—</strong><span class="label">Need review</span></span><svg class="stat-arrow"><use href="#i-arrow"/></svg></button>
+<button class="card stat" data-stat="info" aria-pressed="false"><span class="stat-icon info"><svg><use href="#i-info"/></svg></span><span><strong id="infos">—</strong><span class="label">For your information</span></span><svg class="stat-arrow"><use href="#i-arrow"/></svg></button>
+</section>
+<section class="card onboarding" id="onboard"><div class="onboarding-heading"><div><div class="eyebrow">LET’S GET YOU STARTED</div><h2>Three steps to a clearer picture.</h2></div><div class="actions"><button class="button" id="guide"><svg><use href="#i-book"/></svg>Scan instructions</button></div></div><div class="steps"><div class="step"><div class="step-number">01</div><div><b>Run the local collector</b><span>Double-click Open-HealthScan.cmd in the app folder. The scan takes about 15 seconds.</span></div></div><div class="step"><div class="step-number">02</div><div><b>See the bigger picture</b><span>Your new report opens here automatically. You can also import a saved JSON report.</span></div></div><div class="step"><div class="step-number">03</div><div><b>Take the next step</b><span>Review the checks that need attention and jump to the matching Windows settings.</span></div></div></div><p class="onboard-note" id="onboardNote">Windows 10 / 11 · No installation required. <a id="dl" href="Collect-Health.ps1" download>Download the collector</a> to review it, or see Scan instructions to run it by hand.</p></section>
+<section class="card comparison hidden" id="comparison" aria-labelledby="comparisonTitle">
+  <div class="comparison-head"><div><div class="eyebrow">BETTER WITH PERSPECTIVE</div><h2 id="comparisonTitle">See what changed.</h2><p class="comparison-meta" id="comparisonMeta">Choose an older report from this PC to compare with the current snapshot.</p></div><div class="actions"><button class="button" id="compare" disabled><svg><use href="#i-update"/></svg>Compare with older report</button><button class="text-button hidden" id="clearComparison">Remove comparison</button><input type="file" id="baselineFile" accept=".json,application/json" hidden></div></div>
+  <div class="error" id="comparisonError" role="alert"></div>
+  <div id="comparisonBody" class="hidden"><div class="comparison-summary" id="comparisonSummary" aria-live="polite"></div><p class="comparison-note">Checks are matched by identifier when available, otherwise by name. Only Attention ↔ Passed counts as improved or worsened; unknown results and new or missing checks are shown separately. Device matching uses the computer name, not a hardware identifier. Export JSON saves the current snapshot; Print report includes this comparison.</p><div id="comparisonRows"></div></div>
+</section>
+<div class="content-grid"><section id="results" aria-label="Check results">
+<div class="section-heading"><h2 class="section-title">Check results <span class="count" id="count">0</span></h2><span class="result-meta" id="resultMeta" role="status">Your report will appear here</span></div>
+<div class="card results-card"><div class="result-tools"><label class="search-wrap"><svg aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Search checks</span><input id="search" type="search" placeholder="Search checks, details, or next steps…" autocomplete="off"></label><div class="filters" role="group" aria-label="Filter check status"><button class="filter active" data-filter="all" aria-pressed="true">All results</button><button class="filter" data-filter="warning" aria-pressed="false">Attention</button><button class="filter" data-filter="unknown" aria-pressed="false">Unknown</button><button class="filter" data-filter="pass" aria-pressed="false">Passed</button><button class="filter" data-filter="info" aria-pressed="false">Info</button></div></div><div id="checks"></div><div class="result-footer"><svg><use href="#i-lock"/></svg><span>A snapshot of reported status. No automatic fixes are performed.</span></div></div>
+<div class="report-actions"><button class="button" id="paste">Paste report</button><button class="button" id="export" disabled><svg><use href="#i-download"/></svg>Export JSON</button><button class="button" id="print" disabled title="Before saving a PDF to share, turn off Headers and footers in the print dialog."><svg><use href="#i-print"/></svg>Print report</button><button class="text-button" id="clear" disabled>Clear report</button><button class="text-button hidden" id="resetFilters">Reset filters</button></div>
+</section><div class="right-column">
+<section class="card side-card"><div class="eyebrow">A LITTLE DIRECTION</div><h3 style="margin-top:8px">Your next steps</h3><p class="side-description" id="planIntro">A short, practical list based on your report.</p><div class="plan-list" id="plan"></div><p class="plan-note" id="planNote">Load a report to get started.</p></section>
+<section class="card side-card"><h3>Know what you’re looking at.</h3><div class="legend"><div class="legend-row"><span class="legend-dot" style="background:var(--accent)"></span><div><b>Passed</b><p>The reported setting looks good.</p></div></div><div class="legend-row"><span class="legend-dot" style="background:var(--amber)"></span><div><b>Needs attention</b><p>There’s something worth checking.</p></div></div><div class="legend-row"><span class="legend-dot" style="background:var(--blue)"></span><div><b>Unknown</b><p>Couldn’t be verified. Review it manually.</p></div></div></div><p class="plan-note">Informational checks are not scored. This report is not a security certification or an independent malware scan.</p></section>
+</div></div>
+<footer class="footer"><p>HealthScan reads local Windows status. Results reflect the collection time; keep regular backups and review unknown checks. No accounts, report uploads, or automatic fixes.</p><span>Made for a little peace of mind. &nbsp; / &nbsp; v1.5.1</span></footer>
+</main></div></div>
+<dialog id="pasteModal" aria-labelledby="pasteTitle"><div class="dialog-head"><h2 id="pasteTitle">Bring your report in.</h2><button class="icon-button" id="pasteClose" aria-label="Close paste dialog"><svg><use href="#i-close"/></svg></button></div><p>If the collector copied a report to your clipboard, paste the complete JSON below. It stays on this computer.</p><textarea id="pasteText" aria-label="Report JSON" spellcheck="false" placeholder="Paste your report here…"></textarea><div class="error" id="pasteError" role="alert"></div><div class="actions"><button class="button primary" id="pasteLoad">Load report<svg><use href="#i-arrow"/></svg></button><button class="button" id="pasteCancel">Cancel</button></div></dialog>
+<dialog id="modal" aria-labelledby="guideTitle"><div class="dialog-head"><h2 id="guideTitle">Your next health check.</h2><button class="icon-button" id="close" aria-label="Close scan guide"><svg><use href="#i-close"/></svg></button></div><div id="scriptGuide"><p><b>The easiest way:</b> double-click Open-HealthScan.cmd in the app folder. It collects status and opens your report in a private browser window.</p><p>To keep a report history, run this in Windows PowerShell from the app folder:</p><code>.\Open-HealthScan.cmd -SaveReport</code><p>Or run the collector by hand from the app folder, then import the JSON saved to your Desktop. Windows blocks scripts by default, so start it like this (the setting lasts for this run only):</p><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Collect-Health.ps1</code><p>For an optional Microsoft Defender quick scan, open PowerShell as administrator. It starts in a different folder, so first go to the app folder (cd followed by the folder’s full path), then run:</p><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Collect-Health.ps1 -QuickScan</code></div><div id="exeGuide" class="hidden"><p><b>Run HealthScan.exe again</b> to collect a new snapshot. The results open in your default browser, with no report saved by the tool.</p><p>Your report is only in this browser tab. Reloading the page will not bring it back, so use Export JSON to keep it, or Import report to revisit a copy you saved.</p><p>Run Defender quick scan starts a new elevated scan. The button works for up to 30 minutes after HealthScan.exe starts.</p><p>For an optional Defender quick scan, run this from an administrator Command Prompt:</p><code>HealthScan.exe -QuickScan</code></div><p>Windows Update results use this computer’s cached information. Some checks need administrator access. The optional Defender scan may take several minutes. If script execution is blocked, follow your organization’s approved process.</p></dialog>
+<dialog id="aboutModal" class="about-dialog" aria-labelledby="aboutTitle">
+  <div class="about-titlebar"><span>About ForgeHealthScanner</span><button class="icon-button" id="aboutCloseTop" aria-label="Close about"><svg><use href="#i-close"/></svg></button></div>
+  <div class="about-body">
+  <div class="about-brand"><span class="about-mark"><svg aria-hidden="true"><use href="#i-pulse"/></svg></span><div><h2 id="aboutTitle">ForgeHealthScanner</h2><p>Version 1.5.1 · Windows edition</p><p><i>A clearer picture of your computer.</i></p></div></div>
+  <p class="about-privacy">Your reports stay on this computer. Nothing is uploaded.</p>
+  <dl class="about-shortcuts"><dt>/</dt><dd>Focus search</dd><dt>Escape</dt><dd>Clear search or close a dialog</dd><dt>Import report</dt><dd>Open a saved JSON scan</dd><dt>Export JSON</dt><dd>Save the current report</dd><dt>Print report</dt><dd>Print or save a PDF copy</dd><dt>Compare</dt><dd>Review changes from an older scan</dd></dl>
+  <div class="about-footer"><p>HealthScan reads Windows status locally. Results are a snapshot, not a security certification. No automatic fixes are performed.</p><div class="actions"><button class="button" id="aboutHelp">Scan guide</button><button class="button primary" id="aboutClose">Close</button></div></div>
+  </div>
+</dialog>
+<script src="latest-report.js" onload="window.HEALTHSCAN_REPORT_FILE=true"></script>
+<script>
+
+'use strict';
+let report = null, origin = null, filter = 'all', category = 'all', query = '';
+let baseline = null, baselineReadVersion = 0, currentReadVersion = 0;
+// exported: the current unsaved scan has been exported; clearedSavedCopy: Clear emptied a saved report that is still on disk.
+// clearedTabOnly: Clear emptied a live or address-supplied scan, which reloading cannot bring back.
+let exported = false, clearedSavedCopy = false, clearedTabOnly = false;
+// 'live' (embedded by HealthScan.exe) and 'link' (handed over in the page address) exist only in this tab.
+const unsavedScan = () => !!report && (origin === 'live' || origin === 'link') && !exported;
+function keepUnsavedScan() {
+  return !unsavedScan() || window.confirm('This scan has not been saved and cannot be collected again from this page. Replace it anyway?\n\nChoose Cancel, then Export JSON, to keep a copy first.');
+}
+const scrollBehavior = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; } catch (error) { return 'auto'; } };
+const announce = text => { $('announce').textContent = text; };
+const $ = id => document.getElementById(id);
+const el = (tag, text = '', cls = '') => { const node = document.createElement(tag); node.textContent = text; if (cls) node.className = cls; return node; };
+function icon(name, cls = '') {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', '#i-' + name); svg.setAttribute('aria-hidden', 'true');
+  if (cls) svg.setAttribute('class', cls); svg.append(use); return svg;
+}
+const ORDER = { warning: 0, unknown: 1, info: 2, pass: 3 };
+const LABEL = { warning: 'Attention', unknown: 'Unknown', info: 'Info', pass: 'Passed' };
+const STATUS_ICON = { warning: 'alert', unknown: 'help', info: 'info', pass: 'check' };
+const CATEGORY_NAMES = { all: 'Overview', protection: 'Protection', storage: 'Storage', system: 'System', updates: 'Updates' };
+// Report text never supplies a URL or executable HTML.
+const FIXES = [
+  [/^Disk space/, 'ms-settings:storagesense', 'Open Storage settings'],
+  [/^Drive health/, 'ms-settings:disksandvolumes', 'Open Disks & volumes'],
+  [/^(Real-time antivirus|Defender|Active Defender|Microsoft Defender)/, 'windowsdefender://threat/', 'Open Windows Security'],
+  [/^Windows Firewall/, 'windowsdefender://network/', 'Open firewall settings'],
+  [/^(Restart pending|Windows Update|Pending Windows updates)/, 'ms-settings:windowsupdate', 'Open Windows Update'],
+  [/^System drive encryption/, 'ms-settings:deviceencryption', 'Open Device encryption (if available)'],
+  [/^Battery health/, 'ms-settings:batterysaver', 'Open Power & battery settings'],
+  [/^Startup apps/, 'ms-settings:startupapps', 'Review Startup apps'],
+  [/^Windows version support/, 'ms-settings:windowsupdate', 'Open Windows Update'],
+  [/^(Secure Boot|TPM security chip)/, 'windowsdefender://devicesecurity/', 'Open Device security'],
+];
+function categoryFor(check) {
+  if (/^(Disk space|Drive health|Drive error events)/.test(check.name)) return 'storage';
+  if (/^(Restart pending|Windows Update|Pending Windows updates|Windows version support)/.test(check.name)) return 'updates';
+  if (/^(Real-time antivirus|Defender|Active Defender|Microsoft Defender|Windows Firewall|System drive encryption|Secure Boot|TPM security chip|User Account Control)/.test(check.name)) return 'protection';
+  return 'system';
+}
+function ageText(ms) {
+  const minutes = Math.floor(Math.abs(ms) / 60000);
+  if (minutes < 1) return 'just now';
+  const count = minutes < 60 ? minutes : minutes < 1440 ? Math.floor(minutes / 60) : Math.floor(minutes / 1440);
+  const unit = minutes < 60 ? 'minute' : minutes < 1440 ? 'hour' : 'day';
+  return count + ' ' + unit + (count === 1 ? '' : 's') + (ms < 0 ? ' ahead' : ' ago');
+}
+// Refresh labels only, preserving focused controls and expanded check disclosures.
+function refreshFreshness() {
+  const demo = report && report.source === 'demo';
+  const age = report ? Date.now() - Date.parse(report.collectedAt) : 0;
+  const future = !!report && age < -600000, stale = !!report && age > 600000;
+  const hostExe = window.HEALTHSCAN_HOST === 'exe';
+  // A page-address report is always labelled as such: whoever made the link chose its timestamp and source.
+  $('mode').textContent = !report ? 'READY WHEN YOU ARE' : origin === 'link' ? 'FROM PAGE ADDRESS' : demo ? 'DEMO REPORT' : future ? 'CHECK REPORT TIME' : stale ? 'EARLIER SNAPSHOT' : origin === 'live' ? 'FRESH SNAPSHOT' : origin === 'link' ? 'FROM PAGE ADDRESS' : origin === 'saved' ? 'SAVED SNAPSHOT' : 'IMPORTED REPORT';
+  $('reportAge').textContent = report ? ageText(age) : '—';
+  $('timestamp').textContent = report ? 'Collected ' + new Date(report.collectedAt).toLocaleString() + ' · ' + ageText(age) + (typeof report.collectorVersion === 'string' && /^[0-9][0-9.]{0,11}$/.test(report.collectorVersion) ? ' · scan v' + report.collectorVersion : '') : 'No scan collected yet';
+  $('notice').textContent = !report
+    ? clearedSavedCopy ? 'Report cleared from this tab only. The saved copy beside this page (latest-report.js and the reports folder) will load again on reload. Delete those files to remove it.'
+    : hostExe ? (clearedTabOnly ? 'Report cleared. It was only in this tab, and reloading the page will not bring it back. ' : 'No report in this tab. HealthScan.exe hands each report to the page once, so reloading will not bring an earlier report back. ') + 'Run HealthScan.exe again for a new scan, or import a copy you exported.'
+    : clearedTabOnly ? 'Report cleared. It was only in this tab, and reloading the page will not bring it back. Run Open-HealthScan.cmd again for a new scan, or import a copy you exported.'
+    : 'Ready for your first check? Run the local collector or import a saved report to get started.'
+    : demo ? 'You’re exploring fictional sample results. Run a real scan to see how your own computer is doing.'
+    : future ? 'This report’s timestamp is in the future. Check the computer’s clock and collection time before relying on these results.'
+    : stale ? 'This snapshot was collected ' + ageText(age) + '. Results may have changed. ' + (hostExe ? 'Run HealthScan.exe again for a fresh scan.' : 'Run the local collector again for a fresh scan.')
+    : origin === 'live' ? 'Fresh snapshot, collected ' + ageText(age) + '. This report is only in this tab, and reloading the page will not bring it back. Keep it with Export JSON, or run HealthScan.exe again for a new scan.'
+    : origin === 'link' ? 'This report was handed over in the page address, collected ' + ageText(age) + '. Open-HealthScan.cmd opens reports this way; if you did not just run it, treat these results as unverified. The address was cleared when the page opened, so the report is only in this tab and reloading will clear it. Keep it with Export JSON.'
+    : origin === 'saved' ? 'Loaded from the latest report saved beside this page. Results reflect the collection time.'
+    : 'Report loaded locally. Results reflect the collection time. Nothing is uploaded.';
+  // The demo, clock and age notices win above, but they must not hide where an unsaved report came
+  // from or that reloading loses it.
+  if (report && (demo || future || stale)) {
+    if (origin === 'link') $('notice').textContent = 'Handed over in the page address: if you did not just run Open-HealthScan.cmd, treat these results as unverified. ' + $('notice').textContent + ' The report is only in this tab and reloading will clear it; keep it with Export JSON.';
+    else if (origin === 'live') $('notice').textContent += ' This report is only in this tab, and reloading the page will not bring it back; keep it with Export JSON.';
+  }
+  $('banner').classList.toggle('warning', !!report && !demo && (stale || future));
+}
+function fixLink(check) {
+  const fix = FIXES.find(item => item[0].test(check.name)); if (!fix) return null;
+  const link = el('a', fix[2], 'fix-link'); link.href = fix[1];
+  link.title = 'Opens Windows settings on this computer. Your browser may ask first.';
+  link.append(icon('external')); return link;
+}
+function nextStep(check) {
+  const next = el('div', '', 'next-step'); next.append(el('b', 'SUGGESTED NEXT STEP'), el('p', check.action));
+  const link = fixLink(check); if (link) next.append(link); return next;
+}
+function row(check) {
+  const node = el('article', '', 'check'); node.id = 'check-' + report.checks.indexOf(check);
+  const badge = el('span', '', 'check-icon ' + check.status); badge.append(icon(STATUS_ICON[check.status]));
+  const content = el('div', '', 'check-content');
+  content.append(el('strong', check.name, 'check-title'), el('div', CATEGORY_NAMES[categoryFor(check)], 'check-category'), el('p', check.detail, 'check-detail'));
+  if (check.status === 'warning' || check.status === 'unknown') content.append(nextStep(check));
+  else { const details = el('details'); details.append(el('summary', 'Suggested next step'), nextStep(check)); content.append(details); }
+  node.append(badge, content, el('span', LABEL[check.status], 'pill ' + check.status)); return node;
+}
+function emptyState(title, message) {
+  const node = el('div', '', 'empty'), symbol = el('div', '', 'empty-symbol'); symbol.append(icon('pulse'));
+  node.append(symbol, el('b', title), el('p', message)); return node;
+}
+function filteredChecks() {
+  return (report ? report.checks : []).filter(check =>
+    (category === 'all' || categoryFor(check) === category) && (filter === 'all' || check.status === filter) &&
+    (!query || [check.name, check.detail, check.action].some(value => value.toLowerCase().includes(query))));
+}
+function renderChecks() {
+  const list = $('checks'); list.replaceChildren();
+  const shown = filteredChecks().slice().sort((a, b) => ORDER[a.status] - ORDER[b.status]);
+  const total = report ? report.checks.length : 0;
+  $('count').textContent = total;
+  $('resultMeta').textContent = !report ? 'Your report will appear here' : shown.length ? shown.length + ' of ' + total + ' checks shown' : 'No checks match this view · 0 of ' + total + ' checks shown';
+  $('resetFilters').classList.toggle('hidden', filter === 'all' && category === 'all' && !query);
+  if (!report) { list.append(emptyState('Your clearer picture starts here.', window.HEALTHSCAN_HOST === 'exe' ? 'Run HealthScan.exe again for a new scan, or import a report you exported. Reloading this page will not bring back an earlier report.' : 'Import a report, run the local collector, or explore the demo to see HealthScan in action.')); return; }
+  if (!shown.length) { list.append(emptyState('No checks match this view.', 'Try a different search or reset the filters to see the complete report.')); return; }
+  const passed = shown.filter(check => check.status === 'pass'), other = shown.filter(check => check.status !== 'pass');
+  if (filter === 'all' && !query && other.length) {
+    list.append(el('div', 'ATTENTION, REVIEW & INFORMATION', 'group-label'));
+    other.forEach(check => list.append(row(check)));
+    if (passed.length) {
+      const details = el('details', '', 'passed-group'), summary = el('summary');
+      summary.append(icon('check'), document.createTextNode(passed.length + ' passed checks'), icon('arrow', 'chevron'));
+      details.append(summary); passed.forEach(check => details.append(row(check))); list.append(details);
+    }
+  } else shown.forEach(check => list.append(row(check)));
+}
+function renderPlan() {
+  $('plan').replaceChildren();
+  const needs = report ? report.checks.filter(check => check.status === 'warning' || check.status === 'unknown').sort((a, b) => ORDER[a.status] - ORDER[b.status]) : [];
+  $('planIntro').textContent = !report ? 'A short, practical list based on your report.' : needs.length ? 'Start with these checks, then work through the rest.' : 'No attention or unknown checks in this report.';
+  needs.slice(0, 3).forEach((check, index) => {
+    const button = el('button', '', 'plan-item'), content = el('span');
+    content.append(el('strong', check.name), el('small', 'View check and suggested next step'));
+    button.append(el('span', String(index + 1).padStart(2, '0'), 'plan-number'), content);
+    button.onclick = () => {
+      resetFilters();
+      const target = $('check-' + report.checks.indexOf(check)); if (!target) return;
+      target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
+    };
+    $('plan').append(button);
+  });
+  $('planNote').textContent = !report ? 'Load a report to get started.' : needs.length > 3 ? 'Plus ' + (needs.length - 3) + ' more checks to review in the results.' : needs.length ? 'These shortcuts show guidance. HealthScan makes no changes for you.' : 'Keep regular backups and collect a new snapshot when you want to check in.';
+}
+function updateControls() {
+  document.querySelectorAll('[data-filter]').forEach(button => { const active = button.dataset.filter === filter; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
+  document.querySelectorAll('[data-stat]').forEach(button => { const active = button.dataset.stat === filter; button.classList.toggle('selected', active); button.setAttribute('aria-pressed', String(active)); });
+  document.querySelectorAll('[data-category]').forEach(button => { const active = button.dataset.category === category; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
+  $('breadcrumb').textContent = CATEGORY_NAMES[category];
+}
+function render() {
+  const checks = report ? report.checks : [];
+  const count = status => checks.filter(check => check.status === status).length;
+  const p = count('pass'), w = count('warning'), u = count('unknown'), i = count('info'), scored = p + w + u;
+  $('score').replaceChildren(document.createTextNode(report && scored ? String(p) : '—'));
+  if (report && scored) $('score').append(el('small', '/' + scored));
+  $('ring').style.setProperty('--progress', (scored ? 100 * p / scored : 0) + '%');
+  $('ring').setAttribute('aria-label', scored ? p + ' of ' + scored + ' scored checks passed' : 'No scored checks');
+  ['passes', 'warnings', 'unknowns', 'infos'].forEach((id, index) => $(id).textContent = report ? [p, w, u, i][index] : '—');
+  $('headline').textContent = !report ? 'Good health starts with a little insight.' : w ? (w === 1 ? 'One thing deserves a closer look.' : w + ' things deserve a closer look.') : u ? 'A few things still need a look.' : scored ? 'Looking good, from here.' : 'A little more context for your PC.';
+  $('summary').textContent = !report ? 'Run a local scan or import a report to see what’s working well and what needs a closer look.' : w || u ? 'Your next steps are ready. Start with the checks that need attention, then review anything Windows couldn’t verify.' : scored ? 'All scored checks passed in this snapshot. Keep checking in, and keep your important files backed up.' : 'This report contains informational checks only. There are no scored results to assess.';
+  $('overviewLabel').textContent = report && report.source === 'demo' ? 'SAMPLE HEALTH SNAPSHOT' : 'YOUR HEALTH SNAPSHOT';
+  $('device').textContent = report ? report.device : 'Your Windows PC'; $('os').textContent = report ? report.os : 'Waiting for a report';
+  $('source').textContent = !report ? 'Not connected' : report.source === 'demo' ? 'Fictional demo' : origin === 'live' ? 'Local collector' : origin === 'link' ? 'Page address' : origin === 'saved' ? 'Saved by collector' : 'Imported locally';
+  for (const key of Object.keys(CATEGORY_NAMES)) $('nav-' + key).textContent = report ? checks.filter(check => key === 'all' || categoryFor(check) === key).length : '—';
+  ['export', 'print', 'clear'].forEach(id => $(id).disabled = !report);
+  $('onboard').classList.toggle('hidden', !!report);
+  updateControls(); refreshFreshness(); renderChecks(); renderPlan(); renderComparison();
+}
+// The collector adds one check per volume, physical disk and battery, so large PCs exceed 100.
+const MAX_CHECKS = 500;
+function validate(data) {
+  if (!data || data.schemaVersion !== 1 || !['windows-collector', 'demo'].includes(data.source) || typeof data.device !== 'string' || data.device.length > 1000 || typeof data.os !== 'string' || data.os.length > 1000 || typeof data.collectedAt !== 'string' || !Number.isFinite(Date.parse(data.collectedAt)) || !Array.isArray(data.checks) || !data.checks.length || data.checks.length > MAX_CHECKS) throw Error('This is not a supported health report. Use the included Windows collector.');
+  for (const check of data.checks) if (!check || typeof check.status !== 'string' || !Object.prototype.hasOwnProperty.call(ORDER, check.status) || !['name', 'detail', 'action'].every(key => typeof check[key] === 'string' && check[key].length < 10000) || (check.id !== undefined && (typeof check.id !== 'string' || !/^[A-Za-z0-9:_-]{1,128}$/.test(check.id)))) throw Error('The report contains invalid check data.');
+  return data;
+}
+// Compare named results without treating unavailable or missing checks as improvements.
+function compareReports(current, previous) {
+  validate(current); validate(previous);
+  const deviceKey = value => value.trim().toLowerCase();
+  if (!deviceKey(current.device) || deviceKey(current.device) !== deviceKey(previous.device)) throw Error('Choose an older report from the same computer. The device names must match.');
+  if (current.source !== previous.source) throw Error('Demo reports can only be compared with other demo reports. Use two real collector reports for your PC.');
+  if (Date.parse(previous.collectedAt) >= Date.parse(current.collectedAt)) throw Error('Choose a report collected before the current snapshot. Import the newer report as the current report first.');
+  const index = data => {
+    const map = new Map();
+    for (const check of data.checks) {
+      const key = check.id ? 'id:' + check.id : 'name:' + check.name;
+      if (!check.name.trim() || map.has(key)) throw Error('Comparison needs unique check identifiers or names in both reports. This report contains an empty name or duplicate check.');
+      map.set(key, check);
+    }
+    return map;
+  };
+  const before = index(previous), after = index(current);
+  return [...new Set([...after.keys(), ...before.keys()])].map(key => {
+    const oldCheck = before.get(key) || null, newCheck = after.get(key) || null;
+    const name = newCheck ? newCheck.name : oldCheck.name;
+    let kind;
+    if (!oldCheck) kind = 'added';
+    else if (!newCheck) kind = 'removed';
+    else if (oldCheck.status === 'warning' && newCheck.status === 'pass') kind = 'improved';
+    else if (oldCheck.status === 'pass' && newCheck.status === 'warning') kind = 'worsened';
+    else if (oldCheck.status !== newCheck.status) kind = 'changed';
+    else if (oldCheck.name !== newCheck.name || oldCheck.detail !== newCheck.detail || oldCheck.action !== newCheck.action) kind = 'updated';
+    else kind = 'unchanged';
+    return { name, before: oldCheck, after: newCheck, kind };
+  });
+}
+const CHANGE_LABEL = { improved: 'Improved', worsened: 'Worsened', changed: 'Status changed', updated: 'Details updated', added: 'New check', removed: 'Not in current', unchanged: 'Unchanged' };
+const CHANGE_ORDER = { worsened: 0, improved: 1, changed: 2, added: 3, removed: 4, updated: 5, unchanged: 6 };
+function comparisonSnapshot(check, title) {
+  const node = el('div', '', 'comparison-snapshot'); node.append(el('div', title, 'eyebrow'));
+  if (!check) node.append(el('p', 'This check was not included in this report. Its status cannot be inferred.'));
+  else node.append(el('span', LABEL[check.status], 'pill ' + check.status), el('p', check.name), el('p', check.detail), el('p', 'Suggested next step: ' + check.action, 'comparison-action'));
+  return node;
+}
+function comparisonRow(change) {
+  const node = el('details', '', 'comparison-row'), summary = el('summary'), heading = el('span'), label = el('span', '', 'delta-label');
+  heading.append(el('b', change.name), el('small', (change.before ? LABEL[change.before.status] : 'Not included') + ' → ' + (change.after ? LABEL[change.after.status] : 'Not included')));
+  label.append(el('span', CHANGE_LABEL[change.kind], 'delta-pill ' + change.kind), icon('arrow'));
+  summary.append(heading, label);
+  const pair = el('div', '', 'comparison-pair'); pair.append(comparisonSnapshot(change.before, 'OLDER SNAPSHOT'), comparisonSnapshot(change.after, 'CURRENT SNAPSHOT'));
+  node.append(summary, pair); return node;
+}
+function renderComparison() {
+  $('comparison').classList.toggle('hidden', !report);
+  $('compare').disabled = !report;
+  $('clearComparison').classList.toggle('hidden', !baseline);
+  $('comparisonBody').classList.toggle('hidden', !baseline);
+  $('comparisonRows').replaceChildren(); $('comparisonSummary').replaceChildren();
+  $('comparisonMeta').textContent = baseline
+    ? (report.source === 'demo' ? 'Fictional demo comparison · ' : '') + report.device + ' · Older: ' + new Date(baseline.collectedAt).toLocaleString() + ' → Current: ' + new Date(report.collectedAt).toLocaleString()
+    : 'Choose an older JSON report from this PC to compare with the current snapshot. Both stay in this tab.';
+  if (!report || !baseline) return;
+  const changes = compareReports(report, baseline).sort((a, b) => CHANGE_ORDER[a.kind] - CHANGE_ORDER[b.kind]);
+  const count = kind => changes.filter(change => change.kind === kind).length;
+  const improved = count('improved'), worsened = count('worsened'), unchanged = count('unchanged');
+  for (const [label, total, cls] of [['Improved', improved, 'improved'], ['Worsened', worsened, 'worsened'], ['Other changes', changes.length - improved - worsened - unchanged, ''], ['Unchanged', unchanged, '']]) {
+    const stat = el('div', '', 'delta-stat ' + cls); stat.append(el('b', String(total)), el('span', label)); $('comparisonSummary').append(stat);
+  }
+  const changed = changes.filter(change => change.kind !== 'unchanged');
+  if (!changed.length) $('comparisonRows').append(el('p', 'No changes in the compared checks. Their statuses, details, and suggested actions match.', 'comparison-empty'));
+  changed.forEach(change => $('comparisonRows').append(comparisonRow(change)));
+  if (unchanged) {
+    const details = el('details', '', 'comparison-unchanged'); details.append(el('summary', 'View ' + unchanged + ' unchanged ' + (unchanged === 1 ? 'check' : 'checks')));
+    changes.filter(change => change.kind === 'unchanged').forEach(change => details.append(comparisonRow(change))); $('comparisonRows').append(details);
+  }
+}
+function loadBaseline(data) {
+  if (!report) throw Error('Load the current report before choosing an older snapshot.');
+  compareReports(report, data); // Validate the complete pair before changing the existing comparison.
+  baseline = data; $('comparisonError').textContent = ''; renderComparison();
+}
+// Move focus off a control that is about to be hidden or disabled, so keyboard users keep their place.
+function moveFocusFrom(id, nextId) { if (document.activeElement === $(id)) $(nextId).focus(); }
+function clearBaseline() { moveFocusFrom('clearComparison', 'compare'); baseline = null; baselineReadVersion++; $('comparisonError').textContent = ''; $('baselineFile').value = ''; renderComparison(); }
+function resetFilters() { moveFocusFrom('resetFilters', 'search'); filter = 'all'; category = 'all'; query = ''; $('search').value = ''; updateControls(); renderChecks(); }
+function load(data, from) {
+  const validated = validate(data); // A rejected import leaves the current report intact.
+  currentReadVersion++; $('file').value = ''; $('baselineFile').value = '';
+  baseline = null; baselineReadVersion++; $('comparisonError').textContent = '';
+  report = validated; origin = from; exported = false; clearedSavedCopy = false; clearedTabOnly = false; filter = 'all'; category = 'all'; query = ''; $('search').value = ''; $('error').textContent = ''; render();
+  const count = status => validated.checks.filter(check => check.status === status).length;
+  announce((validated.source === 'demo' ? 'Demo report loaded: ' : 'Report loaded: ') + validated.checks.length + ' checks, ' + count('warning') + ' need attention, ' + count('unknown') + ' need review.');
+}
+const parseReport = text => JSON.parse(text.replace(/^\uFEFF/, '').trim());
+function loadFromAddress() {
+  const match = /^#report=([A-Za-z0-9_-]+)$/.exec(location.hash); if (!match) return false;
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (error) { }
+  try {
+    if (match[1].length > 1400000) throw Error('The report in this address is too large.');
+    const binary = atob(match[1].replace(/-/g, '+').replace(/_/g, '/'));
+    // Anything that can open this page can supply this address, so it is not labelled as a verified collector run.
+    load(parseReport(new TextDecoder().decode(Uint8Array.from(binary, char => char.charCodeAt(0)))), 'link');
+  } catch (error) { $('error').textContent = 'The report in this page address could not be read. ' + error.message; }
+  return true;
+}
+// Open the picker at once: a dialog first can use up the click's user activation, so the picker would never open.
+// The replace question is asked only once a valid file has been chosen.
+$('import').onclick = () => { $('file').click(); };
+const quickScanButton = el('button', 'Run Defender quick scan', 'button hidden');
+quickScanButton.id = 'quickScan';
+quickScanButton.title = 'Starts a new HealthScan with a Defender quick scan; administrator approval is required.';
+const quickScanMessage = el('p', '', 'search-hint');
+quickScanMessage.setAttribute('role', 'status');
+if (window.HEALTHSCAN_HOST === 'exe') quickScanButton.classList.remove('hidden');
+document.querySelector('.report-actions').append(quickScanButton, quickScanMessage);
+const registryButton = el('button', 'Review startup registry', 'button hidden');
+registryButton.id = 'registryCleaner';
+registryButton.title = 'Review missing current-user startup programs; nothing is removed until you select and confirm entries.';
+const registryMessage = el('p', '', 'search-hint'); registryMessage.setAttribute('role', 'status');
+if (window.HEALTHSCAN_HOST === 'exe') registryButton.classList.remove('hidden');
+document.querySelector('.report-actions').append(registryButton, registryMessage);
+registryButton.onclick = async () => {
+  registryButton.disabled = true; registryMessage.textContent = 'Opening startup cleanup…';
+  try {
+    const response = await fetch(location.pathname + 'registrycleaner', { method: 'POST', credentials: 'omit', cache: 'no-store', referrerPolicy: 'same-origin' });
+    registryMessage.textContent = await response.text();
+    if (!response.ok && !registryMessage.textContent) registryMessage.textContent = 'Startup cleanup could not be opened.';
+  } catch (error) { registryMessage.textContent = 'The local scan session has ended. Run HealthScan.exe again to open startup cleanup.'; }
+  finally { registryButton.disabled = false; }
+};
+quickScanButton.onclick = async () => {
+  quickScanButton.disabled = true;
+  quickScanMessage.textContent = 'Waiting for administrator approval…';
+  try {
+    const response = await fetch(location.pathname + 'quickscan', { method: 'POST', credentials: 'omit', cache: 'no-store', referrerPolicy: 'same-origin' });
+    quickScanMessage.textContent = await response.text();
+    if (!response.ok && !quickScanMessage.textContent) quickScanMessage.textContent = 'The quick scan could not be started.';
+  } catch (error) {
+    quickScanMessage.textContent = 'The local scan session has ended. Run HealthScan.exe again to use this button.';
+  } finally { quickScanButton.disabled = false; }
+};
+$('compare').onclick = () => { if (report) $('baselineFile').click(); };
+$('clearComparison').onclick = clearBaseline;
+$('baselineFile').onchange = async event => {
+  const version = ++baselineReadVersion, selectedReport = report;
+  try {
+    const file = event.target.files[0]; if (!file) return;
+    if (file.size > 1024 * 1024) throw Error('Please choose a report smaller than 1 MB.');
+    const text = await file.text();
+    if (version !== baselineReadVersion || report !== selectedReport) return;
+    loadBaseline(parseReport(text));
+  } catch (error) {
+    if (version === baselineReadVersion) $('comparisonError').textContent = error instanceof SyntaxError ? 'That file is not valid report JSON. The existing comparison has been kept.' : error.message;
+  } finally { if (version === baselineReadVersion) event.target.value = ''; }
+};
+$('file').onchange = async event => {
+  const version = ++currentReadVersion;
+  try {
+    const file = event.target.files[0]; if (!file) return;
+    if (file.size > 1024 * 1024) throw Error('Please choose a report smaller than 1 MB.');
+    const text = await file.text();
+    if (version !== currentReadVersion) return;
+    const data = validate(parseReport(text));
+    if (!keepUnsavedScan()) return;
+    load(data, 'import');
+  } catch (error) {
+    if (version === currentReadVersion) $('error').textContent = error instanceof SyntaxError ? 'That file is not valid report JSON. Your current report has been kept.' : error.message;
+  } finally { if (version === currentReadVersion) event.target.value = ''; }
+};
+$('paste').onclick = () => { $('pasteText').value = ''; $('pasteError').textContent = ''; $('pasteModal').showModal(); $('pasteText').focus(); };
+['pasteCancel', 'pasteClose'].forEach(id => $(id).onclick = () => $('pasteModal').close());
+$('pasteLoad').onclick = () => {
+  try { const text = $('pasteText').value; if (!text.trim()) throw Error('Paste your report first.'); if (text.length > 1024 * 1024) throw Error('Please use a report smaller than 1 MB.'); const data = validate(parseReport(text)); if (!keepUnsavedScan()) return; load(data, 'paste'); $('pasteText').value = ''; $('pasteModal').close(); }
+  catch (error) { $('pasteError').textContent = error instanceof SyntaxError ? 'That text is not valid report JSON. Copy the complete report and try again.' : error.message; }
+};
+$('demo').onclick = () => { if (!keepUnsavedScan()) return; load({ schemaVersion: 1, source: 'demo', device: 'STUDIO-WORKSTATION', os: 'Windows 11 Pro', collectedAt: new Date().toISOString(), checks: [
+  { name: 'Real-time antivirus protection', status: 'pass', detail: 'Microsoft Defender real-time protection is enabled.', action: 'Continue monitoring Windows Security.' },
+  { name: 'Windows Firewall profiles', status: 'pass', detail: 'All Windows Firewall profiles are enabled.', action: 'Review settings after network or policy changes.' },
+  { name: 'Disk space C:', status: 'warning', detail: '11% free · 26.4 GB available on your system drive.', action: 'Open Storage settings to review temporary files and unused apps. Keep the files you still need.' },
+  { name: 'Memory availability', status: 'pass', detail: '52% of RAM was available when this snapshot was collected.', action: 'Review memory-heavy applications in Task Manager if the computer becomes slow.' },
+  { name: 'Drive health: Disk 0 (Example SSD)', status: 'pass', detail: 'Windows reports health: Healthy; status: OK. SSD, 477 GB.', action: 'Keep regular backups. Drives can fail without warning.' },
+  { name: 'Restart pending', status: 'warning', detail: 'Windows Update needs a restart to finish installing updates.', action: 'Save your work, close your applications, and restart when convenient.' },
+  { name: 'Defender signatures', status: 'pass', detail: 'Signature age: 1 day.', action: 'Keep automatic protection updates enabled.' },
+  { name: 'Defender quick scan', status: 'info', detail: 'A quick scan was completed earlier today in this fictional example.', action: 'Review Protection history. A completed scan does not guarantee a clean computer.' },
+  { name: 'System drive encryption', status: 'unknown', detail: 'Encryption status could not be read in this sample report.', action: 'Review Device encryption or BitLocker in Settings. Back up recovery keys before making changes.' },
+  { name: 'System uptime', status: 'pass', detail: '3.2 days since the last restart.', action: 'Save your work before your next scheduled restart.' },
+  { name: 'Windows Update recency', status: 'pass', detail: 'The latest Windows update was installed 3 days ago in this example.', action: 'Continue checking Windows Update regularly.' },
+  { name: 'Active Defender detections', status: 'pass', detail: '0 active detections reported by Microsoft Defender.', action: 'Review Protection history if you notice suspicious activity.' },
+  { id: 'battery:demo-pack-1', name: 'Battery health: Battery 1', status: 'pass', detail: 'Full-charge capacity is 92% of design capacity in this fictional example. 46,000 mWh full charge / 50,000 mWh design.', action: 'Watch for changes in runtime. Capacity is an estimate reported by the battery firmware.' },
+  { name: 'Startup apps (inventory only)', status: 'info', detail: '3 startup entries reported in this fictional example:\n- Cloud sync (user registry)\n- Audio console (system registry)\n- Notes helper (startup folder)\nThis inventory does not establish which apps are enabled or their startup impact.', action: 'Review Startup apps in Settings or Task Manager. Keep security and hardware services you rely on.' }
+] }, 'demo');
+  const previous = JSON.parse(JSON.stringify(report));
+  previous.collectedAt = new Date(Date.now() - 7 * 86400000).toISOString();
+  previous.checks.find(check => check.name === 'Defender signatures').status = 'warning';
+  previous.checks.find(check => check.name === 'Defender signatures').detail = 'Signature age: 5 days in this fictional earlier report.';
+  previous.checks.find(check => check.name === 'Disk space C:').status = 'pass';
+  previous.checks.find(check => check.name === 'Disk space C:').detail = '22% free · 52.8 GB available in this fictional earlier report.';
+  previous.checks = previous.checks.filter(check => !check.name.startsWith('Startup apps'));
+  loadBaseline(previous);
+};
+$('clear').onclick = () => {
+  if (!report || !keepUnsavedScan()) return;
+  clearedSavedCopy = origin === 'saved'; clearedTabOnly = origin === 'live' || origin === 'link'; moveFocusFrom('clear', 'import');
+  report = null; origin = null; baseline = null; baselineReadVersion++; currentReadVersion++; filter = 'all'; category = 'all'; query = ''; $('search').value = ''; $('file').value = ''; $('baselineFile').value = ''; $('error').textContent = ''; $('comparisonError').textContent = ''; render();
+  announce('Report cleared from this tab.');
+};
+$('export').onclick = () => {
+  if (!report) return;
+  const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' }));
+  const link = el('a'); link.href = url; link.download = report.source === 'demo' ? 'DEMO-health-report.json' : 'health-report-' + new Date(report.collectedAt).toISOString().slice(0, 10) + '.json';
+  link.click(); exported = true; setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+let printState = null;
+function preparePrint() {
+  if (!report || printState) return;
+  const focused = document.activeElement, focusedCheck = focused && focused.closest ? focused.closest('.check') : null;
+  printState = { focusId: focusedCheck && $('checks').contains(focusedCheck) ? focusedCheck.id : null, filter, category, query, open: Array.from($('checks').querySelectorAll('details')).map(node => node.open), comparisonOpen: Array.from($('comparisonRows').querySelectorAll('details')).map(node => node.open) };
+  filter = 'all'; category = 'all'; query = ''; renderChecks();
+  $('checks').querySelectorAll('details').forEach(node => node.open = true);
+  $('comparisonRows').querySelectorAll('details').forEach(node => node.open = true);
+  refreshFreshness();
+}
+function finishPrint() {
+  if (!printState) return;
+  const previous = printState; printState = null; filter = previous.filter; category = previous.category; query = previous.query; renderChecks();
+  $('checks').querySelectorAll('details').forEach((node, index) => node.open = !!previous.open[index]);
+  $('comparisonRows').querySelectorAll('details').forEach((node, index) => node.open = !!previous.comparisonOpen[index]);
+  // The rows were rebuilt; return keyboard focus to the check it was in.
+  const target = previous.focusId && $(previous.focusId);
+  if (target) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
+}
+$('print').onclick = () => { if (report) window.print(); };
+window.addEventListener('beforeprint', preparePrint); window.addEventListener('afterprint', finishPrint);
+document.querySelectorAll('[data-filter]').forEach(button => button.onclick = () => { filter = button.dataset.filter; updateControls(); renderChecks(); });
+document.querySelectorAll('[data-stat]').forEach(button => button.onclick = () => { filter = filter === button.dataset.stat ? 'all' : button.dataset.stat; category = 'all'; query = ''; $('search').value = ''; updateControls(); renderChecks(); $('results').scrollIntoView({ behavior: scrollBehavior(), block: 'start' }); });
+document.querySelectorAll('[data-category]').forEach(button => button.onclick = () => { category = button.dataset.category; filter = 'all'; query = ''; $('search').value = ''; updateControls(); renderChecks(); if (category !== 'all') $('results').scrollIntoView({ behavior: scrollBehavior(), block: 'start' }); });
+// Report text is English: locale-independent lowercasing keeps "I" searchable under Turkish or Azeri locales.
+$('search').oninput = () => { query = $('search').value.trim().toLowerCase(); renderChecks(); };
+const searchHint = el('p', '', 'search-hint');
+searchHint.append(document.createTextNode('Tip: press '), el('kbd', '/'), document.createTextNode(' to search checks. Press Escape to clear.'));
+$('search').parentElement.parentElement.append(searchHint);
+document.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return;
+  const target = event.target;
+  if (event.key === 'Escape' && target === $('search') && $('search').value) {
+    event.preventDefault(); $('search').value = ''; query = ''; renderChecks(); return;
+  }
+  if (event.key !== '/' || (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) || document.querySelector('dialog[open]')) return;
+  event.preventDefault(); $('search').focus();
+});
+$('resetFilters').onclick = resetFilters;
+['guide', 'guideNav', 'guideQuick'].forEach(id => $(id).onclick = () => $('modal').showModal()); $('close').onclick = () => $('modal').close();
+const aboutButton = el('button', 'About', 'button subtle');
+aboutButton.id = 'about'; aboutButton.setAttribute('aria-label', 'About ForgeHealthScanner');
+document.querySelector('.top-tools').append(aboutButton);
+aboutButton.onclick = () => $('aboutModal').showModal();
+['aboutClose', 'aboutCloseTop'].forEach(id => $(id).onclick = () => $('aboutModal').close());
+$('aboutHelp').onclick = () => { $('aboutModal').close(); $('modal').showModal(); };
+$('theme').onclick = () => {
+  const dark = document.documentElement.dataset.theme !== 'dark'; document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  const title = dark ? 'Switch to light mode' : 'Switch to dark mode'; $('theme').setAttribute('aria-label', title); $('theme').title = title; $('theme').replaceChildren(icon(dark ? 'sun' : 'moon'));
+};
+if (window.HEALTHSCAN_HOST === 'exe') {
+  ['paste', 'scriptGuide'].forEach(id => $(id).classList.add('hidden')); $('exeGuide').classList.remove('hidden');
+  const steps = document.querySelectorAll('#onboard .step');
+  steps[0].querySelector('b').textContent = 'Run HealthScan.exe again'; steps[0].querySelector('span').textContent = 'Each run collects a fresh snapshot and opens the results here. No installation needed.';
+  $('onboardNote').textContent = 'Windows 10 / 11 · Each report is only in the tab it opened in. Use Export JSON to keep a copy.';
+}
+if (window.HEALTHSCAN_LIVE !== undefined) {
+  try { load(window.HEALTHSCAN_LIVE, 'live'); } catch (error) { $('error').textContent = 'The scan inside HealthScan.exe could not be read. ' + error.message; }
+  // Keep the report only in the dashboard's state, so Clear report leaves no copy in the page.
+  try { delete window.HEALTHSCAN_LIVE; } catch (error) { }
+  try { if (window.HEALTHSCAN_LIVE !== undefined) window.HEALTHSCAN_LIVE = undefined; } catch (error) { }
+  document.querySelectorAll('script').forEach(node => { if (!node.getAttribute('src') && /^\s*window\.HEALTHSCAN_HOST\s*=/.test(node.textContent)) node.remove(); });
+} else if (!loadFromAddress()) {
+  if (window.HEALTHSCAN_REPORT !== undefined) { try { load(window.HEALTHSCAN_REPORT, 'saved'); } catch (error) { $('error').textContent = 'The saved report could not be loaded. ' + error.message; } }
+  else if (window.HEALTHSCAN_REPORT_FILE) $('error').textContent = 'The saved report file is damaged. Run Open-HealthScan.cmd -SaveReport again, or import a valid JSON report.';
+}
+render();
+// Background timers may be throttled: also refresh when this tab becomes visible or focused.
+setInterval(refreshFreshness, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshFreshness(); });
+window.addEventListener('focus', refreshFreshness);
+</script>
+</body></html>
+

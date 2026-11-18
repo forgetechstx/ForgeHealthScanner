@@ -1,0 +1,80 @@
+name: Build, test and unsigned release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24.17.0'
+      - name: Build embedded portable EXE
+        shell: powershell
+        run: ./build/Build.ps1
+      - name: Meaningful regression and portable integration tests
+        shell: powershell
+        run: ./build/Test-All.ps1
+      - name: Validate release tag
+        shell: powershell
+        run: |
+          $version = ([version](Get-Item HealthScan.exe).VersionInfo.FileVersion).ToString(3)
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag and binary version differ' }
+      - name: Package, CycloneDX SBOM, checksums and validation
+        shell: powershell
+        run: ./build/Package.ps1
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: unsigned-release
+          path: dist/*
+          if-no-files-found: error
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: site
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: windows-2022
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Download tested release artifact
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download $env:GITHUB_RUN_ID --repo $env:GITHUB_REPOSITORY --name unsigned-release --dir dist
+      - name: Revalidate bytes and publish unsigned release
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./build/Test-Package.ps1 -Directory dist
+          gh release create $env:GITHUB_REF_NAME dist/* --repo $env:GITHUB_REPOSITORY --verify-tag --title "ForgeHealthScanner $env:GITHUB_REF_NAME (unsigned)" --notes-file docs/RELEASE-NOTES.md
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }
+  pages:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy reviewed static website
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

@@ -1,0 +1,60 @@
+# Privacy policy
+
+ForgeHealthScanner by Forge Technologies / forgetechstx. Updated 2026-11-18.
+
+## Local application
+
+The application has no project analytics, advertising, crash upload, account or
+remote reporting endpoint. It reads local Windows and hardware status. Reports
+contain the computer name, OS/version, collection time, health status, drive and
+battery details, selected startup names and sanitized crash program names/counts.
+These are computer-health records, not medical records. They can still be private.
+The computer name is intentionally retained to match reports from the same PC.
+Redaction reduces exposure but does not guarantee anonymity.
+
+The portable EXE hands a report to the browser over an unpredictable loopback-only
+127.0.0.1 URL. It allows a short repeat-request grace period, then serves the page
+without that report. The local session remains for about 30 minutes for manual
+actions. Browser history/extensions, printing, downloads and exports have their
+own storage behavior. Private windows are requested where supported; browser
+policy can prevent them. Administrator runs print a local URL instead of starting
+an elevated browser. No installed service or startup task is created.
+
+Reports are not saved by the EXE unless the user enables local history for that
+scan or exports/prints from the dashboard. History is stored under
+`%LOCALAPPDATA%\HealthScan\scan-history`. Imported reports stay in the page.
+The dashboard stores a theme preference in browser storage. Startup cleanup writes
+`.reg` backups and recovery JSON under `%LOCALAPPDATA%\HealthScan\registry-backups`;
+these may contain private startup commands and the account SID. Backups cover the
+entire current-user Run key, including entries not selected for removal.
+
+The separately supplied script mode can save reports to Desktop or the app's
+reports folder, or use the clipboard as a fallback. Clipboard history/sync and
+OneDrive or other folder synchronization may copy this data under user settings.
+Windows organizational logging can also record PowerShell activity. See README.txt.
+
+Windows Update checks use cached results (`Online=false`). Optional Defender
+scanning and Windows services may communicate with Microsoft according to their
+existing configuration; the app does not disable or replace those policies.
+Explicit website/help links open the selected destination in the user's browser.
+Microsoft's privacy statement: https://privacy.microsoft.com/privacystatement
+
+## Website and support
+
+The static download site has no project trackers, forms, third-party fonts or
+analytics. GitHub hosts the site and release downloads and processes access data,
+including IP addresses, under its privacy statement:
+https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+
+GitHub issues are public. Do not upload reports, logs, startup backups or personal
+data without reviewing and redacting them. The maintainer receives only material
+you choose to submit. Contact the maintainer through the repository; no private
+contact address is required to run the app.
+
+## Retention and removal
+
+History/backups remain local until you remove them; no automatic retention limit
+is imposed. Deleting the EXE does not remove history, backups, browser data or
+exported files. Preserve recovery files you need before deletion. OS/browser/cloud
+copies are managed through those products. No existing user data is migrated or
+deleted by the publication changes.

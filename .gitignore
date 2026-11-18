@@ -1,0 +1,23 @@
+# Saved scans hold details of a real computer; keep them out of version control.
+reports/
+latest-report.js
+ComputerHealth-*.json
+health-report*.json
+*-health-report*.json
+# Local tool settings
+.claude/
+
+# Generated packages and sensitive local state
+dist/
+artifacts/
+HealthScan.exe
+*.pfx
+*.p12
+*.pem
+*.key
+*.log
+.env
+.env.*
+scan-history/
+registry-backups/
+publication-private/

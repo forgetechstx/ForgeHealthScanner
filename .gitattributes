@@ -1,0 +1,19 @@
+# Pin line endings so a fresh clone has the same bytes HealthScan.exe embeds
+# (build\Test-Exe.ps1 compares them byte for byte).
+*.ps1  text eol=lf
+*.html text eol=lf
+*.js   text eol=lf
+*.cs   text eol=lf
+*.txt  text eol=lf
+.gitignore     text eol=lf
+.gitattributes text eol=lf
+# Batch files need CRLF to run reliably in cmd.exe.
+*.cmd  text eol=crlf
+*.exe  binary
+
+# Preserve exact published website and checksum bytes.
+site/** -text
+*.ico binary
+*.md text eol=lf
+*.yml text eol=lf
+*.json text eol=lf

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Code signing policy | Forge Technologies</title><link rel="stylesheet" href="style.css"><header><p class="brand">FORGE TECHNOLOGIES</p><nav><a href="index.html">Downloads</a><a href="privacy.html">Privacy</a><a href="code-signing.html">Code signing policy</a><a href="https://github.com/forgetechstx/ForgeHealthScanner">Source</a></nav></header><main><h1>Code signing policy</h1><pre># Code signing policy
+
+ForgeHealthScanner is a Forge Technologies project maintained by
+[`forgetechstx`](https://github.com/forgetechstx).
+
+## Status
+
+Current releases are **unsigned**. No SignPath acceptance, sponsorship or
+certificate is claimed. The proposed arrangement after acceptance would be
+&quot;Free code signing provided by SignPath.io, certificate by SignPath Foundation&quot;.
+This wording describes a future proposal, not an existing service for this project.
+
+## Roles and manual approval
+
+- Author / maintainer: forgetechstx.
+- Reviewer of outside contributions and release changes: forgetechstx.
+- Release-signing approver: forgetechstx.
+
+Each production signing request requires manual approval by forgetechstx after
+review of the source revision, passing CI, package contents, SBOM and checksums.
+Only artifacts built from this project&#x27;s reviewed source in GitHub Actions may
+be submitted. No signing job is enabled before provider acceptance/onboarding.
+Outside contributions require maintainer review, including workflow changes.
+
+GitHub and SignPath MFA are required before onboarding. This document does not
+assert that MFA has been configured or independently verified. Keys must remain
+with the provider; never create, export or commit release private keys/PFX files.
+Any future service credentials belong in protected CI secrets, never source/logs.
+
+Authenticode status must be checked on the actual downloaded EXE. Label it signed
+only if its expected publisher and trusted certificate chain validate. SignPath
+Foundation would be the publisher under that program, not Forge Technologies.
+Signing does not guarantee immediate SmartScreen reputation.
+
+[Privacy policy](PRIVACY.md) Â· [Official requirements](https://signpath.org/terms)
+</pre></main><footer>Maintained by <a href="https://github.com/forgetechstx">forgetechstx</a> · MIT licensed · No SignPath approval or sponsorship claimed.</footer></html>

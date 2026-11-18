@@ -10,7 +10,7 @@
 #                   (used by HealthScan.exe, which runs this script from inside itself)
 param([switch]$QuickScan,[switch]$OpenDashboard,[switch]$SaveReport,[switch]$EmitJson)
 # Version of this scan. Keep in step with index.html and build\HealthScan.cs; build\Build.ps1 checks.
-$CollectorVersion='1.5.1'
+$CollectorVersion='1.5.2'
 $ErrorActionPreference = 'Stop'
 $checks = @()
 # Under Constrained Language Mode (application control on managed PCs) most .NET calls are refused.

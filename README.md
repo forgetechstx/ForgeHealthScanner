@@ -4,7 +4,7 @@ Portable Windows health-status utility by **Forge Technologies**, maintained by
 [`forgetechstx`](https://github.com/forgetechstx). Windows 10/11; no installer,
 service, scheduled task, account, or application telemetry.
 
-**Current release: 1.5.1 — unsigned.** Windows may show an unknown-publisher warning.
+**Current release: 1.5.2 — unsigned.** Windows may show an unknown-publisher warning.
 SignPath has not accepted or sponsored this project. No trusted signature is claimed.
 
 - [Homepage / downloads](https://forgetechstx.github.io/ForgeHealthScanner/)

@@ -28,12 +28,12 @@ using System.Threading;
 using Microsoft.Win32;
 
 [assembly: AssemblyTitle("ForgeHealthScanner")]
-[assembly: AssemblyDescription("Local health scan. The scan is read-only, uploads nothing and saves no report; the optional startup cleanup changes only entries you confirm.")]
+[assembly: AssemblyDescription("Local Windows status with opt-in history and explicitly confirmed startup cleanup. No project telemetry.")]
 [assembly: AssemblyProduct("ForgeHealthScanner")]
 [assembly: AssemblyCompany("Forge Technologies")]
 [assembly: AssemblyCopyright("Copyright 2026 Forge Technologies (forgetechstx)")]
-[assembly: AssemblyVersion("1.5.1.0")]
-[assembly: AssemblyFileVersion("1.5.1.0")]
+[assembly: AssemblyVersion("1.5.2.0")]
+[assembly: AssemblyFileVersion("1.5.2.0")]
 
 static class Program
 {
@@ -205,7 +205,7 @@ static class Program
     static void OpenProgress()
     {
         cancelRequested = false;
-        progressWindow = new System.Windows.Forms.Form { Text = "ForgeHealthScanner 1.5.1", Width = 560, Height = 280, StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen, FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog, MaximizeBox = false };
+        progressWindow = new System.Windows.Forms.Form { Text = "ForgeHealthScanner 1.5.2", Width = 560, Height = 280, StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen, FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog, MaximizeBox = false };
         progressWindow.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
         progressLabel = new System.Windows.Forms.Label { Left = 20, Top = 20, Width = 500, Height = 55, Text = currentStep };
         var bar = new System.Windows.Forms.ProgressBar { Left = 20, Top = 80, Width = 500, Height = 18, Style = System.Windows.Forms.ProgressBarStyle.Marquee };

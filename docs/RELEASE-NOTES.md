@@ -1,4 +1,4 @@
-ForgeHealthScanner 1.5.1 by Forge Technologies. **Unsigned**: no trusted Authenticode signature, SignPath acceptance or sponsorship is claimed.
+ForgeHealthScanner 1.5.2 by Forge Technologies. **Unsigned**: no trusted Authenticode signature, SignPath acceptance or sponsorship is claimed.
 
 Portable Windows 10/11 executable; no installer/service/startup task/telemetry added. Includes scan progress/cancellation, opt-in local history, existing conservative startup cleanup/backup/undo safeguards and the original dashboard. Publication adds MIT licensing, explicit privacy/signing policies, product metadata, CI tests and release evidence.
 

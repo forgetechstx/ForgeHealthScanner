@@ -45,7 +45,7 @@ Evidence for review is the MIT source, build workflow, passing public CI when
 available, privacy/publication review, portable release, checksums and SBOM.
 
 - CI: https://github.com/forgetechstx/ForgeHealthScanner/actions
-- Release: https://github.com/forgetechstx/ForgeHealthScanner/releases/tag/v1.5.1
+- Release: https://github.com/forgetechstx/ForgeHealthScanner/releases/tag/v1.5.2
 - Review: https://github.com/forgetechstx/ForgeHealthScanner/blob/main/docs/PUBLICATION-REVIEW.md
 - Dependencies: https://github.com/forgetechstx/ForgeHealthScanner/blob/main/THIRD-PARTY-NOTICES.md
 

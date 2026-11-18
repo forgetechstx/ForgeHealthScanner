@@ -416,14 +416,14 @@ with -NoBrowser (about a minute) and starts no browser:
 Node.js is needed only for the dashboard development tests, not to run the app.
 
 VERSION
-This is version 1.5.1. The version is shown at the bottom of the dashboard, by
+This is version 1.5.2. The version is shown at the bottom of the dashboard, by
 "HealthScan.exe -Version", and in each report (collectorVersion), so a saved
 report says which version of the scan produced it. It is written in
 Collect-Health.ps1, index.html and build\HealthScan.cs; build\Build.ps1
 refuses to build if they disagree. The folder is a git repository, so earlier
 versions can be recovered with git.
 
-1.5.1  Added scan progress, cancellation, and per-scan opt-in local JSON history.
+1.5.2  Added scan progress, cancellation, and per-scan opt-in local JSON history.
 
 1.4.1  New: an optional startup cleanup in HealthScan.exe ("Review
        startup registry" button, or HealthScan.exe -RegistryCleaner). It lists

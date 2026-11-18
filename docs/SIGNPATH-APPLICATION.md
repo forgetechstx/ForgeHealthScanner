@@ -1,8 +1,8 @@
 # SignPath Foundation application draft
 
 Owner/maintainer: forgetechstx. Brand: Forge Technologies. Status: unsigned;
-not accepted or sponsored by SignPath. Do not submit until public links and CI
-are verified in docs/PUBLISHING-STATUS.md. This file is copy-ready text, not consent.
+not accepted or sponsored by SignPath. Public links, release downloads and CI were verified; see
+[verification evidence](PUBLISHING-STATUS.md). This file is copy-ready text, not consent.
 
 | Field | Answer |
 | --- | --- |

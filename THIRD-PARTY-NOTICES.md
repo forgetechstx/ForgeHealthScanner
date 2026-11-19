@@ -3,6 +3,7 @@
 Project source, embedded PowerShell/HTML/JavaScript and original icon: MIT; see LICENSE.
 No third-party code packages, fonts, images, scripts or DLLs are bundled in the EXE.
 The icon is an original geometric pulse drawing generated for this project.
+The embedded startup artwork is the supplied Forge Technologies logo.
 
 Runtime dependencies are Windows system components: .NET Framework 4.x (including
 System.Windows.Forms and System.Drawing), Windows PowerShell 5.1 / System.Management.Automation,

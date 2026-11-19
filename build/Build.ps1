@@ -17,6 +17,7 @@ $cleaner = Join-Path $root 'RegistryCleaner.ps1'
 $source = Join-Path $root 'build\HealthScan.cs'
 $atomicSource = Join-Path $root 'build\RegistryAtomic.cs'
 $icon = Join-Path $root 'build\HealthScan.ico'
+$splash = Join-Path $root 'build\ForgeSplash.png'
 $out = Join-Path $root 'HealthScan.exe'
 foreach ($f in $collector, $dashboard, $source) { if (-not (Test-Path -LiteralPath $f)) { throw "Missing $f" } }
 
@@ -41,6 +42,7 @@ if ($VersionCheckOnly) { Write-Host "Versions agree: $vCollector"; return }
 if (-not (Test-Path -LiteralPath $cleaner)) { throw "Missing $cleaner" }
 if (-not (Test-Path -LiteralPath $atomicSource)) { throw "Missing $atomicSource" }
 if (-not (Test-Path -LiteralPath $icon)) { throw "Missing $icon" }
+if (-not (Test-Path -LiteralPath $splash)) { throw "Missing $splash" }
 
 $csc = @("$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe", "$env:WINDIR\Microsoft.NET\Framework\v4.0.30319\csc.exe") |
   Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
@@ -62,6 +64,7 @@ try {
     "/resource:Collect-Health.ps1,Collect-Health.ps1" `
     "/resource:index.html,index.html" `
     "/resource:RegistryCleaner.ps1,RegistryCleaner.ps1" `
+    "/resource:build\ForgeSplash.png,ForgeSplash.png" `
     $source $atomicSource
 } finally { Pop-Location }
 if ($LASTEXITCODE -ne 0) { throw "Compilation failed (exit code $LASTEXITCODE)." }
@@ -75,8 +78,8 @@ if ($LASTEXITCODE -ne 0 -or $saidVersion -ne $vFull) { throw "The built exe did 
 # Loaded from bytes so the file is not locked.
 $asm = [Reflection.Assembly]::Load([IO.File]::ReadAllBytes($out))
 $sha = [Security.Cryptography.SHA256]::Create()
-foreach ($name in 'Collect-Health.ps1', 'index.html', 'RegistryCleaner.ps1') {
-  $s = $asm.GetManifestResourceStream($name)
+foreach ($name in 'Collect-Health.ps1', 'index.html', 'RegistryCleaner.ps1', 'build/ForgeSplash.png') {
+  $s = $asm.GetManifestResourceStream([IO.Path]::GetFileName($name))
   if (-not $s) { throw "The built exe does not embed $name." }
   try { $embedded = [BitConverter]::ToString($sha.ComputeHash($s)) } finally { $s.Dispose() }
   $onDisk = [BitConverter]::ToString($sha.ComputeHash([IO.File]::ReadAllBytes((Join-Path $root $name))))

@@ -18,9 +18,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24.17.0'
-      - name: Build embedded portable EXE
+      - name: Build and package the portable EXE
         shell: powershell
-        run: ./build/Build.ps1
+        run: ./build/Package.ps1 -RequireCleanSource
       - name: Meaningful regression and portable integration tests
         shell: powershell
         run: ./build/Test-All.ps1
@@ -29,9 +29,6 @@ jobs:
         run: |
           $version = ([version](Get-Item HealthScan.exe).VersionInfo.FileVersion).ToString(3)
           if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag and binary version differ' }
-      - name: Package, CycloneDX SBOM, checksums and validation
-        shell: powershell
-        run: ./build/Package.ps1
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: unsigned-release

@@ -1,7 +1,10 @@
 $ErrorActionPreference='Stop'
 $root=Split-Path -Parent $PSScriptRoot
 $manifest=Get-Content -LiteralPath (Join-Path $root 'site/site-sha256.json') -Raw|ConvertFrom-Json
-foreach($file in $manifest.PSObject.Properties){
+$expected=@('.nojekyll','code-signing.html','index.html','privacy.html','style.css')
+$entries=@($manifest.PSObject.Properties)
+if($entries.Count -ne $expected.Count -or @(Compare-Object $expected @($entries.Name) -CaseSensitive).Count){throw 'Website checksum manifest has missing or unexpected files.'}
+foreach($file in $entries){
  if($file.Name -notmatch '^[a-z0-9.-]+$'){throw 'Unsafe website name'}
  if((Get-FileHash -LiteralPath (Join-Path $root ('site/'+$file.Name)) -Algorithm SHA256).Hash.ToLowerInvariant() -cne $file.Value){throw "Website bytes changed: $($file.Name)"}
 }

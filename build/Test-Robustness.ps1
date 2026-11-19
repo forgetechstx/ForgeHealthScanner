@@ -1,4 +1,4 @@
-# Tests how the collector copes with its environment: slow Windows queries, a 32-bit PowerShell host,
+﻿# Tests how the collector copes with its environment: slow Windows queries, a 32-bit PowerShell host,
 # Constrained Language Mode, PowerShell module logging, OneDrive-synced folders and elevated runs.
 # Windows health data is mocked. The only real reads are two registry values (Windows edition and build)
 # read from a 64-bit and a 32-bit PowerShell; one short cmd.exe "rem" is started to test process start.
@@ -69,7 +69,7 @@ $script:StepAbandoned = $true
 $lastStatement = $ast.EndBlock.Statements[$ast.EndBlock.Statements.Count - 1].Extent.Text
 if ($lastStatement -ne 'Exit-Collector 0') { throw "The collector must end with 'Exit-Collector 0' after the hand-off (ends with: $lastStatement)." }
 $trapAst = @($ast.EndBlock.Traps)
-if ($trapAst.Count -ne 1 -or $trapAst[0].Body.Extent.Text -notmatch 'Exit-Collector 1' -or $trapAst[0].Body.Extent.Text -notmatch '\bbreak\b') { throw 'The collector needs one script-level trap that ends the process after a stuck step and otherwise rethrows.' }
+if ($trapAst.Count -ne 1 -or $trapAst[0].Body.Extent.Text -notmatch 'Exit-Collector 1') { throw 'The collector needs one script-level trap that reports a terminating scan failure.' }
 # Real child processes: a .NET call that never returns, left behind after a 1 second limit.
 $childText = @'
 param($path, $mode)
@@ -115,7 +115,7 @@ if (-not $ended.Exited -or $ended.Code -ne 7) { throw "After a stuck step the pr
 if ($ended.Output.Contains('end of script') -or -not $ended.Output.Contains('abandoned:True')) { throw "The process did not end at Exit-Collector ($($ended.Output))." }
 $failedRun = Invoke-ExitChild 'fail' 30
 if (-not $failedRun.Exited -or $failedRun.Code -ne 1) { throw "A scan that failed after a stuck step did not end with exit code 1 (exited: $($failedRun.Exited), code: $($failedRun.Code))." }
-if (-not $failedRun.Output.Contains('test failure after a stuck step')) { throw 'The error that stopped the scan was not shown before the process ended.' }
+if (-not $failedRun.Output.Contains('Scan stopped before the report was ready.')) { throw 'The error that stopped the scan was not shown before the process ended.' }
 $hosted = Invoke-ExitChild 'emitjson' 8
 if ($hosted.Exited -or -not $hosted.Output.Contains('end of script')) { throw 'Under -EmitJson the process must never be ended by the collector.' }
 # Constrained Language Mode refuses [Environment]::Exit, so a plain exit is used there.
@@ -239,7 +239,7 @@ try {
         'Memory availability' = 'pass'; 'System uptime' = 'pass'; 'Disk space C:' = 'pass'; 'Drive health: Disk 0 (Test SSD)' = 'pass'
         'Real-time antivirus protection' = 'pass'; 'Defender signatures' = 'pass'; 'Defender quick scan' = 'info'; 'Active Defender detections' = 'pass'
         # The pause is read without TryParse, which Constrained Language Mode refuses.
-        'Windows Firewall profiles' = 'pass'; 'Restart pending' = 'pass'; 'Windows Update recency' = 'warning'
+        'Windows Firewall profiles' = 'pass'; 'Restart pending' = 'unknown'; 'Windows Update recency' = 'warning'
         # The offline update search needs a COM object, which Constrained Language Mode refuses.
         'Pending Windows updates' = 'unknown'
         'System drive encryption' = 'pass'; 'Battery health: Battery 1' = 'pass'; 'Startup apps (inventory only)' = 'info'

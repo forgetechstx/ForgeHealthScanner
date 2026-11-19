@@ -1,10 +1,21 @@
-param([string]$OutputDirectory)
+param([string]$OutputDirectory, [switch]$RequireCleanSource)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $root=Split-Path -Parent $PSScriptRoot
 if(-not $OutputDirectory){$OutputDirectory=Join-Path $root 'dist'}
 [void][IO.Directory]::CreateDirectory($OutputDirectory)
+$revision=(& git -C $root rev-parse HEAD | Out-String).Trim()
+if($LASTEXITCODE -ne 0 -or $revision -notmatch '^[a-f0-9]{40}$'){throw 'A valid Git source revision is required.'}
+$changes=@(& git -C $root status --porcelain --untracked-files=normal)
+if($LASTEXITCODE -ne 0){throw 'Unable to check the source tree.'}
+if($changes.Count -and $RequireCleanSource){throw 'Release packaging requires a clean source tree.'}
+$sourceState=if($changes.Count){'working-tree'}else{'clean'}
+if($changes.Count){$revision=$null}
+& (Join-Path $PSScriptRoot 'Build.ps1')
+$afterBuild=@(& git -C $root status --porcelain --untracked-files=normal)
+if($LASTEXITCODE -ne 0){throw 'Unable to recheck the source tree.'}
+if($sourceState -eq 'clean' -and ($afterBuild.Count -or (& git -C $root rev-parse HEAD) -ne $revision)){throw 'Source changed while building.'}
 $exe=Join-Path $root 'HealthScan.exe'
 $info=[Diagnostics.FileVersionInfo]::GetVersionInfo($exe)
 $version=([version]$info.FileVersion).ToString(3)
@@ -23,14 +34,13 @@ $components=@()
 foreach($ref in $asm.GetReferencedAssemblies()){
  $components+=@{type='library';'bom-ref'=('system:'+ $ref.Name);name=$ref.Name;version=$ref.Version.ToString();scope='required';properties=@(@{name='forge:distribution';value='Windows system prerequisite; not bundled'})}
 }
-foreach($name in 'Collect-Health.ps1','RegistryCleaner.ps1','index.html','build/HealthScan.cs','build/RegistryAtomic.cs'){
+foreach($name in 'Collect-Health.ps1','RegistryCleaner.ps1','index.html','build/HealthScan.cs','build/RegistryAtomic.cs','build/ForgeSplash.png'){
  $components+=@{type='file';'bom-ref'=('source:'+$name);name=$name;version=$version;licenses=@(@{license=@{id='MIT'}});hashes=@(@{alg='SHA-256';content=(Get-FileHash -LiteralPath (Join-Path $root $name) -Algorithm SHA256).Hash.ToLowerInvariant()})}
 }
 $sbom=[ordered]@{bomFormat='CycloneDX';specVersion='1.6';serialNumber=('urn:uuid:'+[guid]::NewGuid());version=1;metadata=@{timestamp=[DateTime]::UtcNow.ToString('o');component=@{type='application';'bom-ref'='ForgeHealthScanner';name='ForgeHealthScanner';version=$version;licenses=@(@{license=@{id='MIT'}});hashes=@(@{alg='SHA-256';content=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()})}};components=$components}
 $utf8=New-Object Text.UTF8Encoding($false)
 [IO.File]::WriteAllText((Join-Path $OutputDirectory ($stem+'.cdx.json')),($sbom|ConvertTo-Json -Depth 15),$utf8)
-$revision=(& git -C $root rev-parse HEAD | Out-String).Trim()
-$manifest=@{product='ForgeHealthScanner';brand='Forge Technologies';maintainer='forgetechstx';version=$version;signature='unsigned';sourceRevision=$revision;os=[Environment]::OSVersion.Version.ToString();powershell=$PSVersionTable.PSVersion.ToString();compiler=(Get-Item "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe").VersionInfo.FileVersion;runtimeAssemblies=@($asm.GetReferencedAssemblies()|ForEach-Object {$_.FullName});executableSHA256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()}
+$manifest=@{product='ForgeHealthScanner';brand='Forge Technologies';maintainer='forgetechstx';version=$version;signature='unsigned';sourceRevision=$revision;sourceState=$sourceState;os=[Environment]::OSVersion.Version.ToString();powershell=$PSVersionTable.PSVersion.ToString();compiler=(Get-Item "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe").VersionInfo.FileVersion;runtimeAssemblies=@($asm.GetReferencedAssemblies()|ForEach-Object {$_.FullName});executableSHA256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()}
 [IO.File]::WriteAllText((Join-Path $OutputDirectory ($stem+'.manifest.json')),($manifest|ConvertTo-Json -Depth 8),$utf8)
 $lines=@();foreach($suffix in '.zip','.cdx.json','.manifest.json'){$name=$stem+$suffix;$lines+=((Get-FileHash -LiteralPath (Join-Path $OutputDirectory $name) -Algorithm SHA256).Hash.ToLowerInvariant()+'  '+$name)}
 [IO.File]::WriteAllText((Join-Path $OutputDirectory 'SHA256SUMS.txt'),(($lines -join "`n")+"`n"),$utf8)

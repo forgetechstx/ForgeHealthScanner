@@ -269,7 +269,10 @@ $WER = 'Microsoft-Windows-WER-SystemErrorReporting'
 $KP = 'Microsoft-Windows-Kernel-Power'
 Reset-Fixtures
 Add-StabilityChecks
-Assert-Checks 'No stability events' pass -Contains '0 blue-screen stop error(s) and 0 unexpected shutdown(s)' -Excludes 'only goes back'
+Assert-Checks 'No stability events' pass -Contains '0 blue-screen stop error(s) and 0 unexpected shutdown(s)' -Excludes 'only goes back', 'coverage could not be verified'
+$script:oldest.System = $null
+if((Get-LogCoverageNote System 30) -notmatch 'coverage could not be verified'){throw 'Missing warning when event-log coverage cannot be established.'}
+$script:oldest.System = $script:NOW.AddDays(-90)
 if (-not ($script:xpaths[0].Contains("@Name='$WER'") -and $script:xpaths[0].Contains('EventID=41') -and $script:xpaths[0].Contains('2592000000'))) { throw "Stability query is not limited by provider, id and 30 days: $($script:xpaths[0])" }
 Reset-Fixtures
 $script:events.System = @((New-Event $KP 41 3), (New-Event $KP 41 9))

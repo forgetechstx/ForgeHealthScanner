@@ -191,6 +191,19 @@ Assert-Checks 'Restart pending from Windows Update' warning -Contains '(Windows 
 Reset-Fixtures
 Add-RestartPendingCheck
 Assert-Checks 'No restart pending' pass
+Reset-Fixtures
+$script:timeouts = @('asking Windows Update whether a restart is needed')
+Add-RestartPendingCheck
+Assert-Checks 'Timed-out restart query is unknown' unknown -Contains 'did not confirm'
+Reset-Fixtures
+$script:fail = @('com:Microsoft.Update.SystemInfo')
+$script:registryKeys = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending')
+Add-RestartPendingCheck
+Assert-Checks 'Registry restart evidence survives a failed update query' warning -Contains 'component servicing'
+Reset-Fixtures
+$script:fail = @('hotfix')
+Add-UpdateRecencyCheck $null | Out-Null
+Assert-Checks 'Current update search without install evidence is unknown' unknown -Contains 'last installed update could not be verified'
 
 # --- Update pause and recency ---
 Reset-Fixtures

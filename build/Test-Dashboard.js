@@ -161,7 +161,8 @@ function parseFragment(markup, root, audit) {
 function dashboard(globals = {}, setup = {}) {
   const audit = { htmlWrites: [], scrolls: [], confirms: [], activeElement: null };
   const document = new Element('document', audit);
-  parseFragment(html, document, audit);
+  const markup = setup.markup || html;
+  parseFragment(markup, document, audit);
   if (setup.beforeRun) setup.beforeRun(document, audit);
   Object.defineProperty(document, 'activeElement', { get: () => audit.activeElement || document.body });
   document.getElementById = id => document.querySelector('#' + id);
@@ -200,7 +201,11 @@ function dashboard(globals = {}, setup = {}) {
   context.window = context;
   context.addEventListener = document.addEventListener.bind(document);
   if (!globals.matchMedia) context.matchMedia = () => ({ matches: false, addEventListener() {} });
-  vm.runInContext(scripts, context, { filename: 'index.html inline JavaScript' });
+  const pageScripts = setup.markup
+    ? [...markup.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+      .filter(match => !/\bsrc\s*=/.test(match[1])).map(match => match[2]).join('\n')
+    : scripts;
+  vm.runInContext(pageScripts, context, { filename: 'index.html inline JavaScript' });
   return {
     context, document, audit, timers,
     get: id => { const element = document.getElementById(id); assert.ok(element, 'Missing dashboard element #' + id); return element; },
@@ -1170,4 +1175,56 @@ async function main() {
   console.log(`${tests.length - failures}/${tests.length} dashboard regression tests passed.`);
   process.exitCode = failures ? 1 : 0;
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+async function historyEndToEnd(address, older, newer) {
+  const page = new URL(address);
+  assert.equal(page.hostname, '127.0.0.1');
+  const markup = await (await fetch(page)).text();
+  const app = dashboard({
+    location: { hash: '', pathname: page.pathname, search: '' },
+    fetch: (path, options) => fetch(new URL(path, page), {
+      ...options, headers: { Origin: page.origin }
+    })
+  }, { markup });
+  assert.equal(app.get('scanHistory').classList.contains('hidden'), false);
+  await app.trigger('scanHistory', 'click');
+  for (const id of ['historyFirst', 'historySecond']) {
+    const choices = app.get(id).children.map(option => option.value);
+    assert.ok(choices.includes(older) && choices.includes(newer), 'Saved fixtures were not listed');
+  }
+  app.get('historyFirst').value = older;
+  app.get('historySecond').value = older;
+  await app.trigger('historySecond', 'change');
+  assert.equal(app.get('historyCompare').disabled, true, 'Same scan must not compare');
+  app.get('historySecond').value = newer;
+  await app.trigger('historySecond', 'change');
+  await app.trigger('historyCompare', 'click');
+  assert.equal(app.get('historyModal').open, false, app.get('historyStatus').textContent);
+  assert.equal(app.run('Date.parse(report.collectedAt) > Date.parse(baseline.collectedAt)'), true);
+  assert.match(app.get('comparisonSummary').textContent, /2New warnings1Resolved warnings/);
+  const rows = app.get('comparisonRows').children;
+  for (const [name, label] of [['New disk warning', 'New warning'], ['Newly checked', 'New warning'],
+    ['Recovery completed', 'Resolved warning'], ['No longer measured', 'Not in current'],
+    ['Unreadable now', 'Status changed']]) {
+    const row = rows.find(item => item.textContent.includes(name));
+    assert.ok(row, name + ' row missing');
+    assert.match(row.textContent, new RegExp(label));
+  }
+
+  const normal = { method: 'POST', headers: { Origin: page.origin } };
+  const endpoint = new URL(page.pathname + 'history/', page);
+  for (const [url, options] of [
+    [endpoint, { method: 'GET' }],
+    [endpoint, { method: 'POST' }],
+    [endpoint, { method: 'POST', headers: { Origin: 'https://example.invalid' } }],
+    [new URL('/wrong-token/history/' + newer, page), normal],
+    [new URL(endpoint.href + '%2e%2e%5cREADME.txt', page), normal]
+  ]) assert.equal((await fetch(url, options)).status, 404);
+  const fetched = await fetch(new URL(endpoint.href + newer), normal);
+  assert.match(fetched.headers.get('content-type'), /^application\/json/);
+  assert.equal(fetched.headers.get('cache-control'), 'no-store');
+  console.log('PASS portable EXE dashboard opens and compares saved scans through loopback');
+}
+const task = process.argv[2] === '--history-e2e'
+  ? historyEndToEnd(...process.argv.slice(3))
+  : main();
+task.catch(error => { console.error(error); process.exitCode = 1; });

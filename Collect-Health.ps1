@@ -10,7 +10,7 @@
 #                   (used by HealthScan.exe, which runs this script from inside itself)
 param([switch]$QuickScan,[switch]$OpenDashboard,[switch]$SaveReport,[switch]$EmitJson)
 # Version of this scan. Keep in step with index.html and build\HealthScan.cs; build\Build.ps1 checks.
-$CollectorVersion='1.5.2'
+$CollectorVersion='1.6.0'
 $ErrorActionPreference = 'Stop'
 $checks = @()
 # Under Constrained Language Mode (application control on managed PCs) most .NET calls are refused.
@@ -91,7 +91,12 @@ function Exit-Collector([int]$Code) {
  exit $Code
 }
 # A scan that stops on an error after a step was left behind must not hang either.
-trap { if(-not $EmitJson -and $script:StepAbandoned){ Write-Host ($_ | Out-String); Exit-Collector 1 }; break }
+trap {
+ if($EmitJson){ throw }
+ Write-Host 'Scan stopped before the report was ready.'
+ Exit-Collector 1
+ exit 1
+}
 function Invoke-Bounded([string]$Step,[int]$Seconds,[scriptblock]$Script,[object[]]$ArgumentList=@()) {
  if($ExecutionContext.SessionState.LanguageMode -ne 'FullLanguage'){ return (& $Script @ArgumentList) }
  if(-not $script:StepRunspace){
@@ -504,12 +509,15 @@ function Add-RestartPendingCheck {
   $reasons=@()
   if(Test-MachineRegistryKey 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'){ $reasons+='Windows Update' }
   if(Test-MachineRegistryKey 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'){ $reasons+='Windows component servicing' }
+  $restartReadFailure=$null
   try {
    $wuRestart=Invoke-Bounded 'asking Windows Update whether a restart is needed' 20 { [bool](New-Object -ComObject Microsoft.Update.SystemInfo).RebootRequired } | Select-Object -First 1
    if($wuRestart -eq $true -and ($reasons -notcontains 'Windows Update')){ $reasons+='Windows Update' }
-  } catch { }
+  } catch { $restartReadFailure=$_ }
   if($reasons.Count){
    Add-Check 'Restart pending' 'warning' "A restart is needed to finish installing updates ($($reasons -join ', '))." 'Save your work and restart the computer.'
+  } elseif($restartReadFailure -or $null -eq $wuRestart){
+   Add-Check 'Restart pending' 'unknown' ('Windows Update did not confirm whether a restart is needed.'+$(if($restartReadFailure){Get-FailureNote $restartReadFailure})) 'Check Windows Update in Settings for a restart prompt.'
   } else {
    Add-Check 'Restart pending' 'pass' 'No restart is waiting to finish an update.' 'No action needed.'
   }
@@ -549,6 +557,8 @@ function Add-UpdateRecencyCheck($pausedUntil) {
   } catch { $checkUnreadable=$true; $script:UpdateCheckUnreadable=$true }
   if($parts.Count){
    if($checkUnreadable){ $parts+='The time of the last check for updates could not be read.' }
+   if(-not $hf){ $parts+='The last installed update could not be verified.' }
+   if($wuStatus -eq 'pass' -and ($checkUnreadable -or -not $hf)){ $wuStatus='unknown' }
    $wuAction='No action needed.'
    if($staleCheck -or ($checkUnreadable -and $staleInstall)){ $wuAction='Open Windows Update in Settings and select Check for updates.' }
    elseif($staleInstall){
@@ -561,6 +571,7 @@ function Add-UpdateRecencyCheck($pausedUntil) {
     $wuStatus='warning'
     $wuAction='Open Windows Update in Settings and select Resume updates when you are ready.'
    }
+   if($wuStatus -eq 'unknown'){ $wuAction='Review update history in Windows Update settings.' }
    Add-Check 'Windows Update recency' $wuStatus ($parts -join ' ') $wuAction
   } else {
    Add-Check 'Windows Update recency' 'unknown' 'Update history could not be read on this computer.' 'Open Windows Update in Settings to review update history.'
@@ -1001,12 +1012,21 @@ function Get-HealthEvents($logName,$providers,$ids,$days) {
  } @($logName,$xpath))
 }
 function Get-LogCoverageNote($logName,$days) {
+ # Reuse a successful oldest-event lookup for checks sharing the same log in this scan.
+ $oldest=$null
+ if($null -ne $script:OldestLogEvent -and $script:OldestLogEvent.ContainsKey($logName)){
+  $oldest=$script:OldestLogEvent[$logName]
+ }
  # An event log is a fixed-size rolling file; say so when it does not reach back the whole period.
  try {
-  $oldest=Invoke-Bounded "reading the Windows $logName event log" 30 { param($log) (Get-WinEvent -LogName $log -Oldest -MaxEvents 1 -ErrorAction Stop).TimeCreated } @($logName) | Select-Object -First 1
+  if($null -eq $oldest){
+   $oldest=Invoke-Bounded "reading the Windows $logName event log" 30 { param($log) (Get-WinEvent -LogName $log -Oldest -MaxEvents 1 -ErrorAction Stop).TimeCreated } @($logName) | Select-Object -First 1
+   if($oldest -is [datetime] -and $null -ne $script:OldestLogEvent){$script:OldestLogEvent[$logName]=$oldest}
+  }
   if($oldest -is [datetime]){
    $covered=[int](Get-Floor ((Get-Date)-$oldest).TotalDays)
    if($covered -lt $days){ return " The Windows $logName log on this PC only goes back $covered day(s), so earlier events are not counted." }
+   return ''
   }
  } catch { return " The Windows $logName log coverage could not be verified; earlier events may be unavailable." }
  return " The Windows $logName log coverage could not be verified."
@@ -1157,6 +1177,7 @@ function Add-AppCrashChecks {
  }
 }
 Write-Host 'Checking stability and drive error events...'
+$script:OldestLogEvent=@{}
 Add-StabilityChecks
 Add-DriveErrorChecks
 Add-AppCrashChecks

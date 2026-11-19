@@ -14,6 +14,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net;
@@ -32,8 +33,8 @@ using Microsoft.Win32;
 [assembly: AssemblyProduct("ForgeHealthScanner")]
 [assembly: AssemblyCompany("Forge Technologies")]
 [assembly: AssemblyCopyright("Copyright 2026 Forge Technologies (forgetechstx)")]
-[assembly: AssemblyVersion("1.5.2.0")]
-[assembly: AssemblyFileVersion("1.5.2.0")]
+[assembly: AssemblyVersion("1.6.0.0")]
+[assembly: AssemblyFileVersion("1.6.0.0")]
 
 static class Program
 {
@@ -134,13 +135,19 @@ static class Program
         Console.WriteLine();
         try
         {
-            if (!noBrowser) OpenProgress();
             string json;
             try {
+                if (!noBrowser) OpenProgress();
                 json = RunCollector(quickScan);
-                if (keepHistory != null && keepHistory.Checked) SaveHistory(json);
+                if (keepHistory != null && keepHistory.Checked)
+                {
+                    try { SaveHistory(json); }
+                    catch (IOException) { ShowProgressWarning("The scan finished, but the local history file could not be saved."); }
+                    catch (UnauthorizedAccessException) { ShowProgressWarning("The scan finished, but the local history folder is not writable."); }
+                }
             } finally {
                 if (progressWindow != null) { cancelRequested = true; progressWindow.Close(); progressWindow.Dispose(); progressWindow = null; }
+                if (splashArtwork != null) { splashArtwork.Dispose(); splashArtwork = null; }
             }
             byte[] page = Encoding.UTF8.GetBytes(BuildPage(json));
             byte[] pageWithoutReport = Encoding.UTF8.GetBytes(BuildPage(null));
@@ -196,26 +203,71 @@ static class Program
 
     static System.Windows.Forms.Form progressWindow;
     static System.Windows.Forms.Label progressLabel;
+    static System.Drawing.Image splashArtwork;
     static System.Windows.Forms.CheckBox keepHistory;
     static bool historySaved;
     static volatile bool cancelRequested;
     static volatile string currentStep = "Preparing scan...";
     static string HistoryDirectory { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HealthScan", "scan-history"); } }
 
+    static void ShowProgressWarning(string message)
+    {
+        Console.WriteLine(message);
+        System.Windows.Forms.MessageBox.Show(progressWindow, message, "ForgeHealthScanner",
+            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+    }
+
     static void OpenProgress()
     {
         cancelRequested = false;
-        progressWindow = new System.Windows.Forms.Form { Text = "ForgeHealthScanner 1.5.2", Width = 560, Height = 280, StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen, FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog, MaximizeBox = false };
-        progressWindow.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
-        progressLabel = new System.Windows.Forms.Label { Left = 20, Top = 20, Width = 500, Height = 55, Text = currentStep };
-        var bar = new System.Windows.Forms.ProgressBar { Left = 20, Top = 80, Width = 500, Height = 18, Style = System.Windows.Forms.ProgressBarStyle.Marquee };
-        keepHistory = new System.Windows.Forms.CheckBox { Left = 20, Top = 115, Width = 500, Text = "Save this completed scan to local history (contains PC details)" };
-        var history = new System.Windows.Forms.Button { Left = 20, Top = 160, Width = 160, Text = "Open local history" };
-        history.Click += delegate { Directory.CreateDirectory(HistoryDirectory); using (Process.Start(new ProcessStartInfo("explorer.exe", "\"" + HistoryDirectory + "\"") { UseShellExecute = true })) { } };
-        var cancel = new System.Windows.Forms.Button { Left = 400, Top = 160, Width = 120, Text = "Cancel" };
+        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        System.Windows.Forms.Application.EnableVisualStyles();
+        progressWindow = new System.Windows.Forms.Form
+        {
+            Text = "ForgeHealthScanner " + version,
+            ClientSize = new System.Drawing.Size(560, 462),
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F),
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi,
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen,
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+            MaximizeBox = false
+        };
+        using (Stream artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("ForgeSplash.png"))
+        using (System.Drawing.Image original = System.Drawing.Image.FromStream(artwork))
+            splashArtwork = new System.Drawing.Bitmap(original);
+        var banner = new System.Windows.Forms.PictureBox
+        {
+            Left = 20, Top = 14, Width = 520, Height = 244,
+            Image = splashArtwork, SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom,
+            AccessibleName = "Forge Technologies logo", TabStop = false
+        };
+        var branding = new System.Windows.Forms.Label
+        {
+            Left = 20, Top = 268, Width = 520, Height = 25,
+            TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
+            Text = "Forge Technologies  |  ForgeHealthScanner " + version
+        };
+        string location = Assembly.GetExecutingAssembly().Location;
+        if (File.Exists(location)) progressWindow.Icon = System.Drawing.Icon.ExtractAssociatedIcon(location);
+        progressLabel = new System.Windows.Forms.Label { Left = 20, Top = 300, Width = 520, Height = 50, Text = currentStep };
+        var bar = new System.Windows.Forms.ProgressBar { Left = 20, Top = 352, Width = 520, Height = 14, Style = System.Windows.Forms.ProgressBarStyle.Marquee };
+        keepHistory = new System.Windows.Forms.CheckBox { Left = 20, Top = 380, Width = 520, Text = "Save this completed scan to local history (contains PC details)" };
+        var history = new System.Windows.Forms.Button { Left = 20, Top = 418, Width = 160, Height = 28, Text = "Open local history" };
+        history.Click += delegate
+        {
+            try
+            {
+                Directory.CreateDirectory(HistoryDirectory);
+                using (Process.Start(new ProcessStartInfo(HistoryDirectory) { UseShellExecute = true, Verb = "open" })) { }
+            }
+            catch (IOException) { ShowProgressWarning("The local history folder could not be opened."); }
+            catch (UnauthorizedAccessException) { ShowProgressWarning("The local history folder is not accessible."); }
+            catch (System.ComponentModel.Win32Exception) { ShowProgressWarning("Windows could not open the local history folder."); }
+        };
+        var cancel = new System.Windows.Forms.Button { Left = 420, Top = 418, Width = 120, Height = 28, Text = "Cancel" };
         cancel.Click += delegate { cancelRequested = true; cancel.Enabled = false; };
         progressWindow.FormClosing += delegate(object sender, System.Windows.Forms.FormClosingEventArgs e) { if (!cancelRequested) { cancelRequested = true; e.Cancel = true; } };
-        progressWindow.Controls.AddRange(new System.Windows.Forms.Control[] { progressLabel, bar, keepHistory, history, cancel });
+        progressWindow.Controls.AddRange(new System.Windows.Forms.Control[] { banner, branding, progressLabel, bar, keepHistory, history, cancel });
         progressWindow.Show();
         System.Windows.Forms.Application.DoEvents();
     }
@@ -224,7 +276,18 @@ static class Program
     {
         Directory.CreateDirectory(HistoryDirectory);
         string destination = Path.Combine(HistoryDirectory, DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N") + ".json");
-        File.WriteAllText(destination, json, new UTF8Encoding(false));
+        string stagingPath = destination + ".tmp";
+        try
+        {
+            File.WriteAllText(stagingPath, json, new UTF8Encoding(false));
+            File.Move(stagingPath, destination);
+        }
+        finally
+        {
+            try { File.Delete(stagingPath); }
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+        }
         historySaved = true;
         Console.WriteLine("Saved local history: " + destination);
     }
@@ -278,7 +341,8 @@ static class Program
             Stopwatch elapsed = Stopwatch.StartNew();
             while (!pending.AsyncWaitHandle.WaitOne(100)) {
                 if (progressWindow != null) {
-                    progressLabel.Text = currentStep + Environment.NewLine + "Elapsed: " + elapsed.Elapsed.ToString(@"mm\:ss");
+                    string display = currentStep + Environment.NewLine + "Elapsed: " + elapsed.Elapsed.ToString(@"mm\:ss");
+                    if (progressLabel.Text != display) progressLabel.Text = display;
                     System.Windows.Forms.Application.DoEvents();
                 }
                 if (cancelRequested) {
@@ -634,6 +698,68 @@ static class Program
         return !delivered || now <= deliveredAt.AddSeconds(ReportGraceSeconds);
     }
 
+    static readonly Regex HistoryFileName = new Regex(@"\A[0-9]{8}-[0-9]{6}-[a-f0-9]{32}\.json\z",
+        RegexOptions.CultureInvariant);
+    const int HistoryFileLimit = 1024 * 1024;
+
+    static bool IsHistoryFile(FileInfo file)
+    {
+        return HistoryFileName.IsMatch(file.Name) &&
+            (file.Attributes & (FileAttributes.ReparsePoint | FileAttributes.Directory)) == 0 &&
+            file.Length > 0 && file.Length <= HistoryFileLimit;
+    }
+
+    static void ServeHistory(NetworkStream stream, string name)
+    {
+        try
+        {
+            var directory = new DirectoryInfo(HistoryDirectory);
+            if (directory.Exists &&
+                ((directory.Attributes | directory.Parent.Attributes) & FileAttributes.ReparsePoint) != 0)
+            {
+                Send(stream, "403 Forbidden", null, false);
+                return;
+            }
+            if (name == "")
+            {
+                var names = directory.Exists
+                    ? directory.EnumerateFiles("*.json").Where(IsHistoryFile)
+                        .Select(file => file.Name).OrderByDescending(fileName => fileName, StringComparer.Ordinal)
+                        .Take(250).Select(fileName => "\"" + fileName + "\"").ToArray()
+                    : new string[0];
+                // The filename allowlist contains only ASCII digits, lowercase hex, dashes and a suffix.
+                Send(stream, "200 OK", Encoding.UTF8.GetBytes("[" + string.Join(",", names) + "]"), false, "application/json");
+                return;
+            }
+
+            var selected = new FileInfo(Path.Combine(directory.FullName, name));
+            if (!selected.Exists || !IsHistoryFile(selected))
+            {
+                Send(stream, "404 Not Found", null, false);
+                return;
+            }
+            using (var file = new FileStream(selected.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                if (file.Length > HistoryFileLimit)
+                {
+                    Send(stream, "413 Content Too Large", null, false);
+                    return;
+                }
+                byte[] data = new byte[(int)file.Length];
+                int read = 0;
+                while (read < data.Length)
+                {
+                    int count = file.Read(data, read, data.Length - read);
+                    if (count == 0) throw new EndOfStreamException();
+                    read += count;
+                }
+                Send(stream, "200 OK", data, false, "application/json");
+            }
+        }
+        catch (IOException) { Send(stream, "404 Not Found", null, false); }
+        catch (UnauthorizedAccessException) { Send(stream, "403 Forbidden", null, false); }
+    }
+
     static void Handle(TcpClient client, string host, string path, byte[] page, byte[] pageWithoutReport)
     {
         try
@@ -677,6 +803,16 @@ static class Program
                 {
                     if (lines[i].StartsWith("Host:", StringComparison.OrdinalIgnoreCase)) hostHeader = lines[i].Substring(5).Trim();
                     if (lines[i].StartsWith("Origin:", StringComparison.OrdinalIgnoreCase)) originHeader = lines[i].Substring(7).Trim();
+                }
+
+                string historyPath = path + "history/";
+                if (request.Length == 3 && request[1].StartsWith(historyPath, StringComparison.Ordinal)
+                    && QuickScanAllowed(request[0], path + "quickscan", hostHeader, originHeader, host, path))
+                {
+                    string name = request[1].Substring(historyPath.Length);
+                    if (name == "" || HistoryFileName.IsMatch(name)) ServeHistory(stream, name);
+                    else Send(stream, "404 Not Found", null, false);
+                    return;
                 }
 
                 bool quickRequest = request.Length == 3
@@ -749,12 +885,12 @@ static class Program
         catch (ObjectDisposedException) { }
     }
 
-    static void Send(NetworkStream stream, string status, byte[] body, bool headOnly)
+    static void Send(NetworkStream stream, string status, byte[] body, bool headOnly, string contentType = "text/html")
     {
         if (body == null) body = new byte[0];
         string head =
             "HTTP/1.1 " + status + "\r\n" +
-            "Content-Type: text/html; charset=utf-8\r\n" +
+            "Content-Type: " + contentType + "; charset=utf-8\r\n" +
             "Content-Length: " + body.Length + "\r\n" +
             "Connection: close\r\n" +
             // Keep the report out of the browser's cache, and let the page load nothing from anywhere else.

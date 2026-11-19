@@ -7,7 +7,8 @@ ForgeHealthScanner by Forge Technologies / forgetechstx. Updated 2026-11-18.
 The application has no project analytics, advertising, crash upload, account or
 remote reporting endpoint. It reads local Windows and hardware status. Reports
 contain the computer name, OS/version, collection time, health status, drive and
-battery details, selected startup names and sanitized crash program names/counts.
+battery details, antivirus and firewall product names, up to five pending update
+titles, selected startup names and sanitized crash program names/counts.
 These are computer-health records, not medical records. They can still be private.
 The computer name is intentionally retained to match reports from the same PC.
 Redaction reduces exposure but does not guarantee anonymity.
@@ -22,14 +23,17 @@ an elevated browser. No installed service or startup task is created.
 
 Reports are not saved by the EXE unless the user enables local history for that
 scan or exports/prints from the dashboard. History is stored under
-`%LOCALAPPDATA%\HealthScan\scan-history`. Imported reports stay in the page.
+`%LOCALAPPDATA%\HealthScan\scan-history`. The dashboard can list and read selected saved scans over the same local
+loopback session for comparison. Imported reports stay in the page.
 The dashboard keeps its theme choice in page memory; it does not persist report or theme data using localStorage. Startup cleanup writes
 `.reg` backups and recovery JSON under `%LOCALAPPDATA%\HealthScan\registry-backups`;
 these may contain private startup commands and the account SID. Backups cover the
 entire current-user Run key, including entries not selected for removal.
 
 The separately supplied script mode can save reports to Desktop or the app's
-reports folder, or use the clipboard as a fallback. Clipboard history/sync and
+reports folder. The one-click launcher may put the full encoded report in the
+browser address. Browser history, extensions and process command-line monitoring
+may retain or see it. The clipboard is a fallback. Clipboard history/sync and
 OneDrive or other folder synchronization may copy this data under user settings.
 Windows organizational logging can also record PowerShell activity. See README.txt.
 

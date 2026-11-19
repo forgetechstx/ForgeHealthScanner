@@ -50,6 +50,32 @@ foreach ($name in 'Collect-Health.ps1', 'index.html', 'RegistryCleaner.ps1') {
     $mismatch = Get-EmbeddedMismatch $name $embedded ([IO.File]::ReadAllBytes((Join-Path $root $name)))
     Assert ($null -eq $mismatch) $mismatch
 }
+# Verify the graphical startup entry point in the compiled image without opening a browser.
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+$programType = $asm.GetType('Program', $true)
+$privateStatic = [Reflection.BindingFlags]'Static,NonPublic'
+$form = $null
+try {
+    $programType.GetMethod('OpenProgress', $privateStatic).Invoke($null, @()) | Out-Null
+    $form = $programType.GetField('progressWindow', $privateStatic).GetValue($null)
+    $art = $programType.GetField('splashArtwork', $privateStatic).GetValue($null)
+    $historyChoice = $programType.GetField('keepHistory', $privateStatic).GetValue($null)
+    $cancelFlag = $programType.GetField('cancelRequested', $privateStatic)
+    $version = $asm.GetName().Version.ToString(3)
+    Assert ($art.Width -eq 1920 -and $art.Height -eq 1080) 'Startup failed to load the embedded splash artwork.'
+    Assert ($form.Text -eq "ForgeHealthScanner $version" -and @($form.Controls | Where-Object Text -eq "Forge Technologies  |  ForgeHealthScanner $version").Count -eq 1) 'Startup title and branding must use the EXE version.'
+    Assert (-not $historyChoice.Checked) 'Scan history must start unchecked.'
+    $cancel = $form.Controls | Where-Object Text -eq 'Cancel'
+    $cancel.PerformClick()
+    Assert ($cancelFlag.GetValue($null) -and -not $cancel.Enabled) 'The startup Cancel button did not request cancellation.'
+} finally {
+    if ($form) { $form.Dispose() }
+    if ($art) { $art.Dispose() }
+    $programType.GetField('progressWindow', $privateStatic).SetValue($null, $null)
+    $programType.GetField('cancelRequested', $privateStatic).SetValue($null, $false)
+}
+
 # Versions are X.Y or X.Y.Z; a missing patch number counts as .0 (1.4 is 1.4.0).
 function ConvertTo-FullVersion([string]$version) { if ($version -match '^\d+\.\d+$') { "$version.0" } else { $version } }
 $collectorText = [IO.File]::ReadAllText((Join-Path $root 'Collect-Health.ps1'))
@@ -371,6 +397,38 @@ try {
         }
     }
     Assert (-not $proc.HasExited) 'The exe must keep listening for the quick-scan button after the report was handed over.'
+    # Connect the dashboard's controls to the running EXE with disposable history files.
+    $historyDirectory = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'HealthScan\scan-history'
+    [void][IO.Directory]::CreateDirectory($historyDirectory)
+    $fixtureNames = @()
+    $utcNow = [DateTime]::UtcNow
+    function New-HistoryCheck($name, $status) { @{name=$name;status=$status;detail='Test detail';action='Test action'} }
+    $olderChecks = @(
+        (New-HistoryCheck 'New disk warning' 'pass'), (New-HistoryCheck 'Recovery completed' 'warning'),
+        (New-HistoryCheck 'No longer measured' 'warning'), (New-HistoryCheck 'Unreadable now' 'warning')
+    )
+    $newerChecks = @(
+        (New-HistoryCheck 'New disk warning' 'warning'), (New-HistoryCheck 'Recovery completed' 'pass'),
+        (New-HistoryCheck 'Newly checked' 'warning'), (New-HistoryCheck 'Unreadable now' 'unknown')
+    )
+    try {
+        for($i=0; $i -lt 2; $i++){
+            $stamp = $utcNow.AddSeconds($i)
+            $name = $stamp.ToString('yyyyMMdd-HHmmss',[Globalization.CultureInfo]::InvariantCulture) + '-' + [guid]::NewGuid().ToString('N') + '.json'
+            $fixture = @{schemaVersion=1;source='windows-collector';device='FORGE-HISTORY-FIXTURE';os='Windows Test';collectedAt=$stamp.ToString('o');checks=$(if($i){$newerChecks}else{$olderChecks})}
+            $file = [IO.File]::Open((Join-Path $historyDirectory $name), 'CreateNew', 'Write', 'None')
+            $fixtureNames += $name
+            try {
+                $bytes = [Text.Encoding]::UTF8.GetBytes(($fixture | ConvertTo-Json -Depth 5 -Compress))
+                $file.Write($bytes,0,$bytes.Length)
+            } finally { $file.Dispose() }
+        }
+        & node (Join-Path $PSScriptRoot 'Test-Dashboard.js') --history-e2e $url $fixtureNames[0] $fixtureNames[1]
+        Assert ($LASTEXITCODE -eq 0) 'The saved-scan dashboard comparison failed.'
+    } finally {
+        foreach($name in $fixtureNames){ [IO.File]::Delete((Join-Path $historyDirectory $name)) }
+    }
+
 } finally {
     if (-not $proc.HasExited) { $proc.Kill() }
     $proc.Dispose()

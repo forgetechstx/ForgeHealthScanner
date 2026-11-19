@@ -4,7 +4,7 @@ Portable Windows health-status utility by **Forge Technologies**, maintained by
 [`forgetechstx`](https://github.com/forgetechstx). Windows 10/11; no installer,
 service, scheduled task, account, or application telemetry.
 
-**Current release: 1.5.2 — unsigned.** Windows may show an unknown-publisher warning.
+**Current release: 1.6.0 — unsigned.** Windows may show an unknown-publisher warning.
 SignPath has not accepted or sponsored this project. No trusted signature is claimed.
 
 - [Homepage / downloads](https://forgetechstx.github.io/ForgeHealthScanner/)
@@ -32,6 +32,9 @@ backup and a fresh check. Undo skips values that already exist.
 Remove the executable and shortcut to stop using it. Optional reports/history and
 registry backups remain yours; review or retain them before deleting any files.
 Removing the app does not undo previously confirmed startup changes.
+
+Select **Scan history** in the portable dashboard, choose two saved scans, and
+select **Compare saved scans** to see new and resolved warnings.
 
 ## Build / test
 

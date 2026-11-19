@@ -24,6 +24,7 @@
 @media(forced-colors:active){.filter{border-bottom-color:Canvas}.nav-button[aria-pressed="true"],.filter[aria-pressed="true"],.stat[aria-pressed="true"]{forced-color-adjust:none;background:Highlight;color:HighlightText;border-color:Highlight}.stat[aria-pressed="true"] .stat-icon,.stat[aria-pressed="true"] .label,.stat[aria-pressed="true"] .stat-arrow{background:transparent;color:HighlightText}.nav-button[aria-pressed="true"]:focus-visible,.filter[aria-pressed="true"]:focus-visible{outline-color:HighlightText}.stat[aria-pressed="true"]:focus-visible{outline-color:CanvasText}}
 .about-dialog{max-width:620px}.about-brand{display:flex;gap:20px;align-items:center;margin-bottom:24px}.about-mark{width:64px;height:64px;border-radius:15px;background:#173c30;color:#c6f0cc;display:grid;place-items:center;flex-shrink:0}.about-mark svg{width:37px;height:37px}.about-brand h2{font-size:27px}.about-brand p{margin:5px 0 0}.about-privacy{color:var(--accent);font-size:13px!important}.about-shortcuts{display:grid;grid-template-columns:140px 1fr;gap:11px 20px;font-size:12px;line-height:1.5;margin:22px 0}.about-shortcuts dt{font-weight:700}.about-shortcuts dd{margin:0;color:var(--muted)}.about-footer{border-top:1px solid var(--line);padding-top:15px}.about-footer p{font-size:11px}.about-footer .actions{justify-content:space-between}@media(max-width:500px){.about-shortcuts{grid-template-columns:95px 1fr}.about-brand h2{font-size:21px}}
 .about-dialog{width:min(638px,calc(100% - 32px));max-width:638px;padding:0;border-radius:7px;background:#f7f6f2;color:#203246;box-shadow:0 18px 65px #102b3340}.about-dialog .about-titlebar{min-height:37px;margin:0;padding:7px 10px;background:#eaf3f7;color:#172d34;display:flex;align-items:center;justify-content:space-between}.about-titlebar span{font-size:12px;font-weight:500}.about-titlebar .icon-button{width:27px;height:27px;background:transparent;border:0;border-radius:4px;color:#172d34}.about-titlebar .icon-button:hover{background:#d8e9ed}.about-body{padding:29px 30px 25px}.about-dialog .about-brand{gap:20px;margin:0 0 18px}.about-dialog .about-mark{width:64px;height:64px;border-radius:15px;background:#172f34;color:#e4f4ea}.about-dialog .about-brand h2{font-size:28px;line-height:1.15;letter-spacing:-.5px;color:#203246}.about-dialog .about-brand p{font-size:12px;color:#5d7770;margin:5px 0 0;line-height:1.45}.about-dialog .about-brand i{color:#087356}.about-dialog .about-privacy{color:#087356;font-size:13px!important;margin:0 0 15px;line-height:1.6}.about-dialog .about-shortcuts{grid-template-columns:140px 1fr;gap:6px 7px;font-size:12px;line-height:1.35;margin:0 0 20px}.about-dialog .about-shortcuts dt{color:#203246}.about-dialog .about-shortcuts dd{color:#203246}.about-dialog .about-footer{border:0;padding:0}.about-dialog .about-footer p{font-size:11px;line-height:1.5;color:#607a73;margin:0 0 15px}.about-dialog .about-footer .actions{justify-content:space-between;margin-top:0}.about-dialog .about-footer .button{border:0;border-radius:0;background:#e9edec;color:#203246;min-height:36px;padding:9px 17px}.about-dialog .about-footer .button.primary{background:#137957;color:#fff;min-width:103px}.about-dialog .about-footer .button:hover{filter:brightness(.95)}@media(max-width:500px){.about-body{padding:22px 20px}.about-dialog .about-shortcuts{grid-template-columns:105px 1fr}.about-dialog .about-brand h2{font-size:21px}}
+.history-picks{display:grid;gap:12px;margin:16px 0}.history-picks label{display:grid;gap:5px;font-size:13px;font-weight:600}.history-picks select{width:100%;font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px}.history-picks select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}#historyStatus{overflow-wrap:anywhere}
 </style>
 </head><body>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
@@ -60,12 +61,12 @@
 <button class="nav-button" data-category="system" aria-pressed="false"><svg><use href="#i-system"/></svg>System<span class="nav-count" id="nav-system">—</span></button>
 <button class="nav-button" data-category="updates" aria-pressed="false"><svg><use href="#i-update"/></svg>Updates<span class="nav-count" id="nav-updates">—</span></button>
 </nav><div class="sidebar-guide"><div class="nav-label">RESOURCES</div><button class="nav-button" id="guideNav"><svg><use href="#i-book"/></svg>Scan guide</button></div>
-<div class="sidebar-bottom"><div class="privacy-card"><svg><use href="#i-lock"/></svg><b>Private by design.</b><p>Your report stays on this PC.<br>No accounts. No uploads.</p></div><div class="version"><span>WINDOWS EDITION</span><span>v1.5.2</span></div></div>
+<div class="sidebar-bottom"><div class="privacy-card"><svg><use href="#i-lock"/></svg><b>Private by design.</b><p>Your report stays on this PC.<br>No accounts. No uploads.</p></div><div class="version"><span>WINDOWS EDITION</span><span>v1.6.0</span></div></div>
 </aside><div class="workspace">
 <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Overview</strong></div><div class="top-tools"><span class="local-pill"><span class="dot"></span>All data stays local</span><button class="icon-button" id="guideQuick" aria-label="Open scan guide" title="Open scan guide"><svg><use href="#i-book"/></svg></button><button class="icon-button" id="theme" aria-label="Switch to dark mode" title="Switch to dark mode"><svg><use href="#i-moon"/></svg></button></div></header>
 <main id="main">
 <div class="print-heading">HEALTHSCAN · LOCAL SYSTEM HEALTH REPORT</div>
-<div class="page-heading"><div><div class="eyebrow">A little clarity goes a long way</div><h1>Your system, at a glance.</h1><p class="subheading">A clearer view of your PC. A simple plan for what comes next.</p></div><div class="actions"><button class="button subtle" id="demo">Explore demo</button><button class="button primary" id="import"><svg><use href="#i-upload"/></svg>Import report</button><input type="file" id="file" accept=".json,application/json" hidden></div></div>
+<div class="page-heading"><div><div class="eyebrow">A little clarity goes a long way</div><h1>Your system, at a glance.</h1><p class="subheading">A clearer view of your PC. A simple plan for what comes next.</p></div><div class="actions"><button class="button hidden" id="scanHistory">Scan history</button><button class="button subtle" id="demo">Explore demo</button><button class="button primary" id="import"><svg><use href="#i-upload"/></svg>Import report</button><input type="file" id="file" accept=".json,application/json" hidden></div></div>
 <div class="status-banner" id="banner"><svg aria-hidden="true"><use href="#i-info"/></svg><span id="notice">Load a report to see your computer’s health.</span><span class="pill" id="mode">READY WHEN YOU ARE</span></div><div class="error" role="alert" id="error"></div><div class="sr-only" role="status" id="announce"></div>
 <section class="hero-grid" id="overview" aria-label="Health overview">
 <div class="card health-card"><div class="ring" id="ring" role="img" aria-label="No scored checks"><div class="ring-inner"><div class="ring-value" id="score">—</div><span class="ring-label">CHECKS PASSED</span></div></div><div class="health-copy"><div class="eyebrow" id="overviewLabel">YOUR HEALTH SNAPSHOT</div><h2 id="headline">Good health starts with a little insight.</h2><p id="summary">Run a local scan or import a report to see what’s working well and what needs a closer look.</p><div class="age-line"><svg><use href="#i-clock"/></svg><span id="timestamp">No scan collected yet</span></div></div></div>
@@ -81,7 +82,7 @@
 <section class="card comparison hidden" id="comparison" aria-labelledby="comparisonTitle">
   <div class="comparison-head"><div><div class="eyebrow">BETTER WITH PERSPECTIVE</div><h2 id="comparisonTitle">See what changed.</h2><p class="comparison-meta" id="comparisonMeta">Choose an older report from this PC to compare with the current snapshot.</p></div><div class="actions"><button class="button" id="compare" disabled><svg><use href="#i-update"/></svg>Compare with older report</button><button class="text-button hidden" id="clearComparison">Remove comparison</button><input type="file" id="baselineFile" accept=".json,application/json" hidden></div></div>
   <div class="error" id="comparisonError" role="alert"></div>
-  <div id="comparisonBody" class="hidden"><div class="comparison-summary" id="comparisonSummary" aria-live="polite"></div><p class="comparison-note">Checks are matched by identifier when available, otherwise by name. Only Attention ↔ Passed counts as improved or worsened; unknown results and new or missing checks are shown separately. Device matching uses the computer name, not a hardware identifier. Export JSON saves the current snapshot; Print report includes this comparison.</p><div id="comparisonRows"></div></div>
+  <div id="comparisonBody" class="hidden"><div class="comparison-summary" id="comparisonSummary" aria-live="polite"></div><p class="comparison-note">Checks are matched by identifier when available, otherwise by name. A warning is resolved when the same check passes. A missing or unknown result does not resolve a warning. Device matching uses the computer name, not a hardware identifier. Export JSON saves the current snapshot; Print report includes this comparison.</p><div id="comparisonRows"></div></div>
 </section>
 <div class="content-grid"><section id="results" aria-label="Check results">
 <div class="section-heading"><h2 class="section-title">Check results <span class="count" id="count">0</span></h2><span class="result-meta" id="resultMeta" role="status">Your report will appear here</span></div>
@@ -91,14 +92,24 @@
 <section class="card side-card"><div class="eyebrow">A LITTLE DIRECTION</div><h3 style="margin-top:8px">Your next steps</h3><p class="side-description" id="planIntro">A short, practical list based on your report.</p><div class="plan-list" id="plan"></div><p class="plan-note" id="planNote">Load a report to get started.</p></section>
 <section class="card side-card"><h3>Know what you’re looking at.</h3><div class="legend"><div class="legend-row"><span class="legend-dot" style="background:var(--accent)"></span><div><b>Passed</b><p>The reported setting looks good.</p></div></div><div class="legend-row"><span class="legend-dot" style="background:var(--amber)"></span><div><b>Needs attention</b><p>There’s something worth checking.</p></div></div><div class="legend-row"><span class="legend-dot" style="background:var(--blue)"></span><div><b>Unknown</b><p>Couldn’t be verified. Review it manually.</p></div></div></div><p class="plan-note">Informational checks are not scored. This report is not a security certification or an independent malware scan.</p></section>
 </div></div>
-<footer class="footer"><p>HealthScan reads local Windows status. Results reflect the collection time; keep regular backups and review unknown checks. No accounts, report uploads, or automatic fixes.</p><span>Made for a little peace of mind. &nbsp; / &nbsp; v1.5.2</span></footer>
+<footer class="footer"><p>HealthScan reads local Windows status. Results reflect the collection time; keep regular backups and review unknown checks. No accounts, report uploads, or automatic fixes.</p><span>Made for a little peace of mind. &nbsp; / &nbsp; v1.6.0</span></footer>
 </main></div></div>
+<dialog id="historyModal" aria-labelledby="historyTitle">
+  <div class="dialog-head"><h2 id="historyTitle">Scan history</h2><button class="icon-button" id="historyClose" aria-label="Close scan history"><svg><use href="#i-close"/></svg></button></div>
+  <p>Choose two scans saved on this PC. The newer scan becomes the current report.</p>
+  <div class="history-picks">
+    <label>First scan<select id="historyFirst" disabled></select></label>
+    <label>Second scan<select id="historySecond" disabled></select></label>
+  </div>
+  <p id="historyStatus" role="status"></p>
+  <div class="actions"><button class="button primary" id="historyCompare" disabled>Compare saved scans</button></div>
+</dialog>
 <dialog id="pasteModal" aria-labelledby="pasteTitle"><div class="dialog-head"><h2 id="pasteTitle">Bring your report in.</h2><button class="icon-button" id="pasteClose" aria-label="Close paste dialog"><svg><use href="#i-close"/></svg></button></div><p>If the collector copied a report to your clipboard, paste the complete JSON below. It stays on this computer.</p><textarea id="pasteText" aria-label="Report JSON" spellcheck="false" placeholder="Paste your report here…"></textarea><div class="error" id="pasteError" role="alert"></div><div class="actions"><button class="button primary" id="pasteLoad">Load report<svg><use href="#i-arrow"/></svg></button><button class="button" id="pasteCancel">Cancel</button></div></dialog>
 <dialog id="modal" aria-labelledby="guideTitle"><div class="dialog-head"><h2 id="guideTitle">Your next health check.</h2><button class="icon-button" id="close" aria-label="Close scan guide"><svg><use href="#i-close"/></svg></button></div><div id="scriptGuide"><p><b>The easiest way:</b> double-click Open-HealthScan.cmd in the app folder. It collects status and opens your report in a private browser window.</p><p>To keep a report history, run this in Windows PowerShell from the app folder:</p><code>.\Open-HealthScan.cmd -SaveReport</code><p>Or run the collector by hand from the app folder, then import the JSON saved to your Desktop. Windows blocks scripts by default, so start it like this (the setting lasts for this run only):</p><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Collect-Health.ps1</code><p>For an optional Microsoft Defender quick scan, open PowerShell as administrator. It starts in a different folder, so first go to the app folder (cd followed by the folder’s full path), then run:</p><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Collect-Health.ps1 -QuickScan</code></div><div id="exeGuide" class="hidden"><p><b>Run HealthScan.exe again</b> to collect a new snapshot. The results open in your default browser, with no report saved by the tool.</p><p>Your report is only in this browser tab. Reloading the page will not bring it back, so use Export JSON to keep it, or Import report to revisit a copy you saved.</p><p>Run Defender quick scan starts a new elevated scan. The button works for up to 30 minutes after HealthScan.exe starts.</p><p>For an optional Defender quick scan, run this from an administrator Command Prompt:</p><code>HealthScan.exe -QuickScan</code></div><p>Windows Update results use this computer’s cached information. Some checks need administrator access. The optional Defender scan may take several minutes. If script execution is blocked, follow your organization’s approved process.</p></dialog>
 <dialog id="aboutModal" class="about-dialog" aria-labelledby="aboutTitle">
   <div class="about-titlebar"><span>About ForgeHealthScanner</span><button class="icon-button" id="aboutCloseTop" aria-label="Close about"><svg><use href="#i-close"/></svg></button></div>
   <div class="about-body">
-  <div class="about-brand"><span class="about-mark"><svg aria-hidden="true"><use href="#i-pulse"/></svg></span><div><h2 id="aboutTitle">ForgeHealthScanner</h2><p>Version 1.5.2 · Windows edition</p><p><i>A clearer picture of your computer.</i></p></div></div>
+  <div class="about-brand"><span class="about-mark"><svg aria-hidden="true"><use href="#i-pulse"/></svg></span><div><h2 id="aboutTitle">ForgeHealthScanner</h2><p>Version 1.6.0 · Windows edition</p><p><i>A clearer picture of your computer.</i></p></div></div>
   <p class="about-privacy">Your reports stay on this computer. Nothing is uploaded.</p>
   <dl class="about-shortcuts"><dt>/</dt><dd>Focus search</dd><dt>Escape</dt><dd>Clear search or close a dialog</dd><dt>Import report</dt><dd>Open a saved JSON scan</dd><dt>Export JSON</dt><dd>Save the current report</dd><dt>Print report</dt><dd>Print or save a PDF copy</dd><dt>Compare</dt><dd>Review changes from an older scan</dd></dl>
   <div class="about-footer"><p>HealthScan reads Windows status locally. Results are a snapshot, not a security certification. No automatic fixes are performed.</p><div class="actions"><button class="button" id="aboutHelp">Scan guide</button><button class="button primary" id="aboutClose">Close</button></div></div>
@@ -325,10 +336,11 @@ function comparisonSnapshot(check, title) {
   else node.append(el('span', LABEL[check.status], 'pill ' + check.status), el('p', check.name), el('p', check.detail), el('p', 'Suggested next step: ' + check.action, 'comparison-action'));
   return node;
 }
+const isNewWarning = change => change.after?.status === 'warning' && change.before?.status !== 'warning';
 function comparisonRow(change) {
   const node = el('details', '', 'comparison-row'), summary = el('summary'), heading = el('span'), label = el('span', '', 'delta-label');
   heading.append(el('b', change.name), el('small', (change.before ? LABEL[change.before.status] : 'Not included') + ' → ' + (change.after ? LABEL[change.after.status] : 'Not included')));
-  label.append(el('span', CHANGE_LABEL[change.kind], 'delta-pill ' + change.kind), icon('arrow'));
+  label.append(el('span', isNewWarning(change) ? 'New warning' : change.kind === 'improved' ? 'Resolved warning' : CHANGE_LABEL[change.kind], 'delta-pill ' + (isNewWarning(change) ? 'worsened' : change.kind)), icon('arrow'));
   summary.append(heading, label);
   const pair = el('div', '', 'comparison-pair'); pair.append(comparisonSnapshot(change.before, 'OLDER SNAPSHOT'), comparisonSnapshot(change.after, 'CURRENT SNAPSHOT'));
   node.append(summary, pair); return node;
@@ -345,8 +357,8 @@ function renderComparison() {
   if (!report || !baseline) return;
   const changes = compareReports(report, baseline).sort((a, b) => CHANGE_ORDER[a.kind] - CHANGE_ORDER[b.kind]);
   const count = kind => changes.filter(change => change.kind === kind).length;
-  const improved = count('improved'), worsened = count('worsened'), unchanged = count('unchanged');
-  for (const [label, total, cls] of [['Improved', improved, 'improved'], ['Worsened', worsened, 'worsened'], ['Other changes', changes.length - improved - worsened - unchanged, ''], ['Unchanged', unchanged, '']]) {
+  const improved = count('improved'), newWarnings = changes.filter(isNewWarning).length, unchanged = count('unchanged');
+  for (const [label, total, cls] of [['New warnings', newWarnings, 'worsened'], ['Resolved warnings', improved, 'improved'], ['Other changes', changes.length - improved - newWarnings - unchanged, ''], ['Unchanged', unchanged, '']]) {
     const stat = el('div', '', 'delta-stat ' + cls); stat.append(el('b', String(total)), el('span', label)); $('comparisonSummary').append(stat);
   }
   const changed = changes.filter(change => change.kind !== 'unchanged');
@@ -422,6 +434,80 @@ quickScanButton.onclick = async () => {
     quickScanMessage.textContent = 'The local scan session has ended. Run HealthScan.exe again to use this button.';
   } finally { quickScanButton.disabled = false; }
 };
+const historyDialog = $('historyModal'), historyFirst = $('historyFirst'), historySecond = $('historySecond');
+const historyStatus = $('historyStatus'), historyCompare = $('historyCompare');
+let historyRequest = 0;
+const historyFilePattern = /^([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2})([0-9]{2})([0-9]{2})-[a-f0-9]{32}\.json$/;
+async function requestHistory(name = '') {
+  const response = await fetch(location.pathname + 'history/' + name,
+    { method: 'POST', credentials: 'omit', cache: 'no-store', referrerPolicy: 'same-origin' });
+  if (!response.ok) throw Error('Saved scans could not be read. Run HealthScan.exe again if this dashboard session has ended.');
+  return parseReport(await response.text());
+}
+function updateHistoryChoice() {
+  historyCompare.disabled = !historyFirst.value || !historySecond.value || historyFirst.value === historySecond.value;
+}
+historyFirst.onchange = historySecond.onchange = updateHistoryChoice;
+$('historyClose').onclick = () => historyDialog.close();
+historyDialog.addEventListener('close', () => { historyRequest++; $('scanHistory').focus(); });
+$('scanHistory').onclick = async () => {
+  const version = ++historyRequest;
+  historyFirst.replaceChildren(); historySecond.replaceChildren();
+  historyFirst.disabled = historySecond.disabled = historyCompare.disabled = true;
+  historyStatus.textContent = 'Reading saved scans…';
+  historyDialog.showModal();
+  try {
+    const names = await requestHistory();
+    if (!historyDialog.open || version !== historyRequest) return;
+    if (!Array.isArray(names) || names.some(name => typeof name !== 'string' || !historyFilePattern.test(name))) throw Error('The scan history list could not be read.');
+    const dates = new Map();
+    for (const name of names) {
+      const [, year, month, day, hour, minute, second] = historyFilePattern.exec(name);
+      const date = new Date(year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + 'Z');
+      const label = Number.isFinite(date.getTime()) ? date.toLocaleString() : name;
+      dates.set(label, (dates.get(label) || 0) + 1);
+      for (const select of [historyFirst, historySecond]) {
+        const option = el('option', label + (dates.get(label) > 1 ? ' (' + dates.get(label) + ')' : ''));
+        option.value = name; select.append(option);
+      }
+    }
+    historyFirst.value = names[0] || ''; historySecond.value = names[1] || '';
+    historyFirst.disabled = historySecond.disabled = names.length < 2;
+    historyStatus.textContent = names.length < 2
+      ? 'Save at least two scans using “Save this completed scan to local history” in the startup window.'
+      : 'Showing up to 250 recent saved scans.';
+    updateHistoryChoice();
+  } catch (error) {
+    if (historyDialog.open && version === historyRequest) historyStatus.textContent = error.message;
+  }
+};
+historyCompare.onclick = async () => {
+  if (historyCompare.disabled) return;
+  const version = ++historyRequest, requestedReport = report, requestedBaseline = baseline;
+  const first = historyFirst.value, second = historySecond.value;
+  historyFirst.disabled = historySecond.disabled = historyCompare.disabled = true;
+  historyStatus.textContent = 'Reading both scans…';
+  try {
+    const pair = (await Promise.all([requestHistory(first), requestHistory(second)]))
+      .map(validate).sort((a, b) => Date.parse(a.collectedAt) - Date.parse(b.collectedAt));
+    if (!historyDialog.open || version !== historyRequest) return;
+    if (report !== requestedReport || baseline !== requestedBaseline) throw Error('The current report changed. Choose the saved scans again.');
+    compareReports(pair[1], pair[0]);
+    if (!keepUnsavedScan()) { historyStatus.textContent = 'Comparison canceled. The current report was kept.'; return; }
+    load(pair[1], 'saved');
+    loadBaseline(pair[0]);
+    historyDialog.close();
+    $('comparison').scrollIntoView({ block: 'start' });
+  } catch (error) {
+    if (historyDialog.open && version === historyRequest) historyStatus.textContent = error instanceof SyntaxError ? 'A selected scan contains invalid JSON.' : error.message;
+  } finally {
+    if (historyDialog.open && version === historyRequest) {
+      historyFirst.disabled = historySecond.disabled = false;
+      updateHistoryChoice();
+    }
+  }
+};
+
 $('compare').onclick = () => { if (report) $('baselineFile').click(); };
 $('clearComparison').onclick = clearBaseline;
 $('baselineFile').onchange = async event => {
@@ -544,6 +630,7 @@ $('theme').onclick = () => {
   const title = dark ? 'Switch to light mode' : 'Switch to dark mode'; $('theme').setAttribute('aria-label', title); $('theme').title = title; $('theme').replaceChildren(icon(dark ? 'sun' : 'moon'));
 };
 if (window.HEALTHSCAN_HOST === 'exe') {
+  $('scanHistory').classList.remove('hidden');
   ['paste', 'scriptGuide'].forEach(id => $(id).classList.add('hidden')); $('exeGuide').classList.remove('hidden');
   const steps = document.querySelectorAll('#onboard .step');
   steps[0].querySelector('b').textContent = 'Run HealthScan.exe again'; steps[0].querySelector('span').textContent = 'Each run collects a fresh snapshot and opens the results here. No installation needed.';

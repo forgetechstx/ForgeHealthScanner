@@ -4,8 +4,10 @@
    reports, private metadata, secrets or signing material. Run build/Test-Publication.ps1.
 2. Update the collector, dashboard and assembly versions together; Build.ps1 rejects
    mismatches. Run Build.ps1 and Test-All.ps1 on Windows PowerShell 5.1 with Node.
-3. Run Package.ps1. It creates a portable ZIP, CycloneDX JSON, manifest and SHA-256
-   checksums. Test-Package.ps1 checks exact ZIP bytes, metadata and signature status.
+3. Run Package.ps1 in a fresh output directory. It rebuilds the EXE and validates
+   its bytes, metadata, signature status, SBOM and checksums. CI uses
+   -RequireCleanSource and tests the same build that goes into the release ZIP.
+   Local packages from modified worktrees record no source commit.
 4. Push the reviewed main branch and tag vX.Y.Z. The release workflow repeats build,
    tests and validation; only a successful build can publish the unsigned assets.
 5. Enable GitHub Pages (Actions source). The Pages job deploys the static site.

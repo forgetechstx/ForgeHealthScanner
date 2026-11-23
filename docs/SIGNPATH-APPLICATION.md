@@ -15,7 +15,7 @@ not accepted or sponsored by SignPath. Public links, release downloads and CI we
 | Category | System Utilities, or Other if that is the available choice |
 | Tagline | Portable local Windows health checks with review before startup cleanup. |
 | Wikipedia | Leave blank; none established. |
-| Build system | GitHub Actions on Windows; built-in C# compiler/PowerShell; pinned actions and Node; meaningful regression and portable-binary tests; package/checksum/SBOM validation. |
+| Build system | GitHub Actions on Windows; built-in C# compiler/PowerShell; pinned actions; meaningful regression and portable-binary tests; package/checksum/SBOM validation. |
 | Team | forgetechstx is author, maintainer, reviewer and manual release-signing approver. |
 | Contact name/email | Applicant must supply personally. |
 | Company/legal status | Forge Technologies is the brand; applicant must confirm legal organization/type. |
@@ -26,7 +26,7 @@ not accepted or sponsored by SignPath. Public links, release downloads and CI we
 ForgeHealthScanner is a portable Windows 10/11 utility maintained by forgetechstx
 under the Forge Technologies brand. It reads local storage, battery, Windows Update
 cache, protection/configuration status and selected stability-event summaries, then
-displays a local browser dashboard. It offers progress/cancellation and per-scan
+displays results in a native Windows desktop window. It offers progress/cancellation and per-scan
 opt-in local JSON history. Optional Microsoft Defender quick scanning is explicit.
 Optional missing per-user startup cleanup requires selection and confirmation,
 backs up the Run key, rechecks candidates and uses transactional changes. Undo
@@ -45,7 +45,7 @@ Evidence for review is the MIT source, build workflow, passing public CI when
 available, privacy/publication review, portable release, checksums and SBOM.
 
 - CI: https://github.com/forgetechstx/ForgeHealthScanner/actions
-- Release: https://github.com/forgetechstx/ForgeHealthScanner/releases/tag/v1.5.2
+- Release: https://github.com/forgetechstx/ForgeHealthScanner/releases/tag/v2.0.1
 - Review: https://github.com/forgetechstx/ForgeHealthScanner/blob/main/docs/PUBLICATION-REVIEW.md
 - Dependencies: https://github.com/forgetechstx/ForgeHealthScanner/blob/main/THIRD-PARTY-NOTICES.md
 

@@ -9,7 +9,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parent.parent
 BASE = 'https://github.com/forgetechstx/ForgeHealthScanner'
 HOME = 'https://forgetechstx.github.io/ForgeHealthScanner/'
-VERSION = '1.6.0'
+VERSION = '2.0.1'
 STEM = f'ForgeHealthScanner-{VERSION}-portable-unsigned'
 
 def get(url):
@@ -61,7 +61,7 @@ if build['executableSHA256'] != exe_hash or build['signature'] != 'unsigned' or 
     raise ValueError('Downloaded EXE does not match build manifest')
 if bom['metadata']['component']['hashes'][0]['content'] != exe_hash:
     raise ValueError('Downloaded EXE does not match SBOM')
-output = ROOT / 'dist/public-verification'
+output = ROOT / 'dist/public-verification' / VERSION
 output.mkdir(parents=True, exist_ok=True)
 for name, content in files.items():
     (output / name).write_bytes(content)

@@ -1,23 +1,7 @@
-# Build, release and verify
+# Native release process
 
-1. Review source and build/workflow changes. Confirm publication contains no live
-   reports, private metadata, secrets or signing material. Run build/Test-Publication.ps1.
-2. Update the collector, dashboard and assembly versions together; Build.ps1 rejects
-   mismatches. Run Build.ps1 and Test-All.ps1 on Windows PowerShell 5.1 with Node.
-3. Run Package.ps1 in a fresh output directory. It rebuilds the EXE and validates
-   its bytes, metadata, signature status, SBOM and checksums. CI uses
-   -RequireCleanSource and tests the same build that goes into the release ZIP.
-   Local packages from modified worktrees record no source commit.
-4. Push the reviewed main branch and tag vX.Y.Z. The release workflow repeats build,
-   tests and validation; only a successful build can publish the unsigned assets.
-5. Enable GitHub Pages (Actions source). The Pages job deploys the static site.
-   Check unauthenticated HTTP 200 for repo, homepage, privacy, signing policy,
-   release and every asset. Download assets afresh and validate SHA-256 locally.
-6. Before signing is enabled, obtain provider acceptance, configure MFA and protect
-   approval credentials. Every signing request needs forgetechstx's manual approval.
-
-Generated release assets are never committed as source. SHA-256 is computed after
-final packaging; no subsequent line-ending conversion is allowed. Website files
-have Git `-text` attributes and are checked against site-sha256.json after a fresh
-clone/deployment. The source must pass byte-preservation checks before publishing.
-Release private keys are never generated/exported here. Current status: unsigned.
+1. Build with `build/Build-Native.ps1` on Windows and run `build/Test-All.ps1` in Windows PowerShell 5.1. The native EXE is under `dist/native`.
+2. Run `build/Package.ps1 -RequireCleanSource -OutputDirectory dist/release` in a fresh checkout with an empty staging directory. Packaging rebuilds the native EXE, validates its unsigned status, and generates the portable ZIP, build manifest, CycloneDX SBOM and SHA-256 checksums.
+3. CI tests the same build, validates the version against the tag, and checks the four staged files. The release job revalidates the downloaded artifact and publishes only those files.
+4. Keep version metadata, website download URLs, notes and website byte checksums in sync. The main-branch Pages deployment publishes the reviewed site. Verify anonymous access and SHA-256 after publication with `build/Verify-PublicRelease.py`.
+5. Signing requires provider onboarding and manual approval by forgetechstx. See CODE-SIGNING.md.

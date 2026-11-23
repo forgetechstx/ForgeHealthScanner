@@ -6,6 +6,9 @@ $zips=@(Get-ChildItem -LiteralPath $Directory -Filter '*.zip')
 if($zips.Count -ne 1){throw 'Expected one package'}
 $stem=[IO.Path]::GetFileNameWithoutExtension($zips[0].Name)
 $required=@('.zip','.cdx.json','.manifest.json' | ForEach-Object {$stem+$_})
+$expectedFiles=@($required)+@('SHA256SUMS.txt')
+$actual=@(Get-ChildItem -LiteralPath $Directory -Force)
+if($actual.Count -ne 4 -or @($actual | Where-Object { $_.PSIsContainer -or ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) }).Count -or @(Compare-Object $expectedFiles @($actual.Name) -CaseSensitive).Count){throw 'Unexpected release sidecar or directory.'}
 $seen=@{}
 foreach($line in [IO.File]::ReadAllLines((Join-Path $Directory 'SHA256SUMS.txt'))){
  if($line -notmatch '^([a-f0-9]{64})  (ForgeHealthScanner-[0-9.]+-portable-unsigned\.(zip|cdx\.json|manifest\.json))$'){throw 'Invalid checksum entry'}
@@ -30,6 +33,7 @@ try {
   if($info.ProductName -ne 'ForgeHealthScanner' -or $info.CompanyName -ne 'Forge Technologies'){throw 'Unexpected product metadata in package'}
  }finally{[IO.File]::Delete($probe)}
  $manifest=Get-Content -LiteralPath ($zips[0].FullName -replace '\.zip$','.manifest.json') -Raw|ConvertFrom-Json
+ if($stem -cne ('ForgeHealthScanner-'+$manifest.version+'-portable-unsigned')){throw 'Package filename/version mismatch'}
  if(([version]$info.FileVersion).ToString(3) -cne $manifest.version){throw 'Packaged executable version does not match the manifest.'}
  if($hash -cne $manifest.executableSHA256 -or $manifest.signature -ne 'unsigned'){throw 'EXE manifest mismatch'}
  $bom=Get-Content -LiteralPath ($zips[0].FullName -replace '\.zip$','.cdx.json') -Raw|ConvertFrom-Json

@@ -15,24 +15,27 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: '24.17.0'
       - name: Build and package the portable EXE
         shell: powershell
-        run: ./build/Package.ps1 -RequireCleanSource
+        run: ./build/Package.ps1 -OutputDirectory dist/release -RequireCleanSource
       - name: Meaningful regression and portable integration tests
         shell: powershell
         run: ./build/Test-All.ps1
       - name: Validate release tag
+        id: version
         shell: powershell
         run: |
-          $version = ([version](Get-Item HealthScan.exe).VersionInfo.FileVersion).ToString(3)
+          $version = ([version](Get-Item dist/native/HealthScan.exe).VersionInfo.FileVersion).ToString(3)
+          "stem=ForgeHealthScanner-$version-portable-unsigned" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag and binary version differ' }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: unsigned-release
-          path: dist/*
+          path: |
+            dist/release/${{ steps.version.outputs.stem }}.zip
+            dist/release/${{ steps.version.outputs.stem }}.cdx.json
+            dist/release/${{ steps.version.outputs.stem }}.manifest.json
+            dist/release/SHA256SUMS.txt
           if-no-files-found: error
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         if: github.ref == 'refs/heads/main'
@@ -60,7 +63,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           ./build/Test-Package.ps1 -Directory dist
-          gh release create $env:GITHUB_REF_NAME dist/* --repo $env:GITHUB_REPOSITORY --verify-tag --title "ForgeHealthScanner $env:GITHUB_REF_NAME (unsigned)" --notes-file docs/RELEASE-NOTES.md
+          $stem = "dist/ForgeHealthScanner-$($env:GITHUB_REF_NAME.Substring(1))-portable-unsigned"
+          gh release create $env:GITHUB_REF_NAME "$stem.zip" "$stem.cdx.json" "$stem.manifest.json" dist/SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --verify-tag --title "ForgeHealthScanner $env:GITHUB_REF_NAME (unsigned)" --notes-file docs/RELEASE-NOTES.md
           if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }
   pages:
     if: github.ref == 'refs/heads/main'

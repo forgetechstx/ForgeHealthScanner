@@ -1,53 +1,21 @@
 # ForgeHealthScanner
 
-Portable Windows health-status utility by **Forge Technologies**, maintained by
-[`forgetechstx`](https://github.com/forgetechstx). Windows 10/11; no installer,
-service, scheduled task, account, or application telemetry.
+Forge Technologies' portable Windows 10/11 health scanner. **Version 2.0.1 is unsigned.** Extract the ZIP and open `HealthScan.exe`. The C# desktop app runs locally using the Windows .NET Framework. It needs no installer or PowerShell session.
 
-**Current release: 1.6.0 — unsigned.** Windows may show an unknown-publisher warning.
-SignPath has not accepted or sponsored this project. No trusted signature is claimed.
-
-- [Homepage / downloads](https://forgetechstx.github.io/ForgeHealthScanner/)
-- [Releases](https://github.com/forgetechstx/ForgeHealthScanner/releases)
-- [Privacy](PRIVACY.md) · [Code signing policy](CODE-SIGNING.md)
-- [Detailed usage](README.txt) · [Build and release](docs/RELEASING.md)
-- [Publication review](docs/PUBLICATION-REVIEW.md) · [License](LICENSE)
+[Download the unsigned portable ZIP](https://github.com/forgetechstx/ForgeHealthScanner/releases/download/v2.0.1/ForgeHealthScanner-2.0.1-portable-unsigned.zip) · [Release and SHA-256 checksums](https://github.com/forgetechstx/ForgeHealthScanner/releases/tag/v2.0.1) · [Homepage](https://forgetechstx.github.io/ForgeHealthScanner/)
 
 ## Use
 
-Download the portable ZIP, verify SHA-256 against the release checksum file,
-extract, and run `HealthScan.exe`. The executable embeds the collector and dashboard.
-Windows' included .NET Framework 4.x and Windows PowerShell 5.1 are required.
-Optional checks may need administrator rights. The progress window offers Cancel.
-Local history is off by default for every scan; enable it to save that completed
-report under `%LOCALAPPDATA%\HealthScan\scan-history`.
+- Follow the scan in the main window, cancel it, or filter completed checks. Missing Windows provider data appears as needing review.
+- Select **Save this scan locally** during each scan you want to keep. Open **Scan history** to compare two saved scans. A changed collector version or uncertain battery identity can prevent a warning from being marked resolved.
+- Import, export or print a report. Reports contain details about the PC.
+- Choose **Startup cleanup** to review missing current-user startup entries. Removal requires confirmation and creates a backup. Use **History and undo** for selective recovery or **Backups** to preview and delete backup files.
+- **Defender quick scan** asks for approval, monitors Defender and reports its outcome. **Remove a program** opens Windows Installed apps. Select an app there and follow Windows' uninstall prompts.
 
-The report covers storage, battery, Windows Update cache, protection status,
-startup inventory and selected stability events. It is not a medical application
-or a guarantee of system security. It performs no remote port or exploit scanning.
-The optional Defender quick scan uses Microsoft Defender. Startup cleanup only
-changes explicitly selected missing per-user Run entries after confirmation,
-backup and a fresh check. Undo skips values that already exist.
+[Usage and command-line options](README.txt) · [Privacy](PRIVACY.md) · [Build and release](docs/RELEASING.md) · [Signing policy](CODE-SIGNING.md) · [License](LICENSE)
 
-Remove the executable and shortcut to stop using it. Optional reports/history and
-registry backups remain yours; review or retain them before deleting any files.
-Removing the app does not undo previously confirmed startup changes.
+## Build and test
 
-Select **Scan history** in the portable dashboard, choose two saved scans, and
-select **Compare saved scans** to see new and resolved warnings.
+On Windows with Windows PowerShell 5.1, run `./build/Build-Native.ps1`, then `./build/Test-All.ps1`. The binary is written to `dist/native/HealthScan.exe`. The release workflow packages the tested native binary with a checksum list, build manifest and CycloneDX SBOM. No external packages are restored.
 
-## Build / test
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File build/Build.ps1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File build/Test-All.ps1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File build/Package.ps1
-```
-
-No NuGet/npm packages are restored. Dashboard tests use Node's built-in modules.
-CI pins Node and action commits; Windows system libraries and runner images are
-provided by Microsoft and are recorded, not falsely represented as vendored OSS.
-See [dependency inventory](THIRD-PARTY-NOTICES.md).
-
-This is a new public project. Tests, audits and release evidence are engineering
-evidence, not proof of widespread adoption or independent endorsement.
+Maintained by [forgetechstx](https://github.com/forgetechstx).

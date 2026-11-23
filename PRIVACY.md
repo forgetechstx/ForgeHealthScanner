@@ -1,47 +1,18 @@
 # Privacy policy
 
-ForgeHealthScanner by Forge Technologies / forgetechstx. Updated 2026-11-18.
+ForgeHealthScanner by Forge Technologies / forgetechstx. Updated 2026-11-23.
 
-## Local application
+## Native desktop app (2.0.1)
 
-The application has no project analytics, advertising, crash upload, account or
-remote reporting endpoint. It reads local Windows and hardware status. Reports
-contain the computer name, OS/version, collection time, health status, drive and
-battery details, antivirus and firewall product names, up to five pending update
-titles, selected startup names and sanitized crash program names/counts.
-These are computer-health records, not medical records. They can still be private.
-The computer name is intentionally retained to match reports from the same PC.
-Redaction reduces exposure but does not guarantee anonymity.
+ForgeHealthScanner reads local Windows and hardware status. Reports include the PC name, OS build, time, storage and battery details, hashed battery identifiers when available, registered antivirus names, configuration results and event counts. Startup inventory includes a count. A report can identify the PC.
 
-The portable EXE hands a report to the browser over an unpredictable loopback-only
-127.0.0.1 URL. It allows a short repeat-request grace period, then serves the page
-without that report. The local session remains for about 30 minutes for manual
-actions. Browser history/extensions, printing, downloads and exports have their
-own storage behavior. Private windows are requested where supported; browser
-policy can prevent them. Administrator runs print a local URL instead of starting
-an elevated browser. No installed service or startup task is created.
+The app keeps results in memory. Opting in during a scan saves its report under `%LOCALAPPDATA%\HealthScan\scan-history`. Users may export to another location or print through a configured printer. Shared printers and synchronized folders may send copies elsewhere. Imported reports are read locally.
 
-Reports are not saved by the EXE unless the user enables local history for that
-scan or exports/prints from the dashboard. History is stored under
-`%LOCALAPPDATA%\HealthScan\scan-history`. The dashboard can list and read selected saved scans over the same local
-loopback session for comparison. Imported reports stay in the page.
-The dashboard keeps its theme choice in page memory; it does not persist report or theme data using localStorage. Startup cleanup writes
-`.reg` backups and recovery JSON under `%LOCALAPPDATA%\HealthScan\registry-backups`;
-these may contain private startup commands and the account SID. Backups cover the
-entire current-user Run key, including entries not selected for removal.
+Confirmed startup cleanup saves the entire current-user Run key and a journal under `%LOCALAPPDATA%\HealthScan\registry-backups`. These can include private commands, paths and the account SID. Undo restores selected entries. Users may preview and delete individual backups. History and backup management reject redirected folders.
 
-The separately supplied script mode can save reports to Desktop or the app's
-reports folder. The one-click launcher may put the full encoded report in the
-browser address. Browser history, extensions and process command-line monitoring
-may retain or see it. The clipboard is a fallback. Clipboard history/sync and
-OneDrive or other folder synchronization may copy this data under user settings.
-Windows organizational logging can also record PowerShell activity. See README.txt.
+Windows Update checks use the local cache. A user-requested Defender scan follows Microsoft's existing configuration. Remove a program opens Windows Installed apps, where Windows and the selected uninstaller handle removal. ForgeHealthScanner does not upload a software inventory or health reports. It has no project telemetry, account, installed service or startup task.
 
-Windows Update checks use cached results (`Online=false`). Optional Defender
-scanning and Windows services may communicate with Microsoft according to their
-existing configuration; the app does not disable or replace those policies.
-Explicit website/help links open the selected destination in the user's browser.
-Microsoft's privacy statement: https://privacy.microsoft.com/privacystatement
+The earlier PowerShell edition used a loopback browser dashboard and a separate script mode. [Read the 1.6.0 privacy policy](https://github.com/forgetechstx/ForgeHealthScanner/blob/v1.6.0/PRIVACY.md).
 
 ## Website and support
 

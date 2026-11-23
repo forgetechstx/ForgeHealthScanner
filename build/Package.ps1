@@ -3,8 +3,9 @@ $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $root=Split-Path -Parent $PSScriptRoot
-if(-not $OutputDirectory){$OutputDirectory=Join-Path $root 'dist'}
+if(-not $OutputDirectory){$OutputDirectory=Join-Path $root ('dist/release-'+[guid]::NewGuid().ToString('N'))}
 [void][IO.Directory]::CreateDirectory($OutputDirectory)
+if (@(Get-ChildItem -LiteralPath $OutputDirectory -Force).Count) {throw 'Choose an empty directory for release staging.'}
 $revision=(& git -C $root rev-parse HEAD | Out-String).Trim()
 if($LASTEXITCODE -ne 0 -or $revision -notmatch '^[a-f0-9]{40}$'){throw 'A valid Git source revision is required.'}
 $changes=@(& git -C $root status --porcelain --untracked-files=normal)
@@ -12,11 +13,11 @@ if($LASTEXITCODE -ne 0){throw 'Unable to check the source tree.'}
 if($changes.Count -and $RequireCleanSource){throw 'Release packaging requires a clean source tree.'}
 $sourceState=if($changes.Count){'working-tree'}else{'clean'}
 if($changes.Count){$revision=$null}
-& (Join-Path $PSScriptRoot 'Build.ps1')
+& (Join-Path $PSScriptRoot 'Build-Native.ps1')
 $afterBuild=@(& git -C $root status --porcelain --untracked-files=normal)
 if($LASTEXITCODE -ne 0){throw 'Unable to recheck the source tree.'}
 if($sourceState -eq 'clean' -and ($afterBuild.Count -or (& git -C $root rev-parse HEAD) -ne $revision)){throw 'Source changed while building.'}
-$exe=Join-Path $root 'HealthScan.exe'
+$exe=Join-Path $root 'dist/native/HealthScan.exe'
 $info=[Diagnostics.FileVersionInfo]::GetVersionInfo($exe)
 $version=([version]$info.FileVersion).ToString(3)
 $stem="ForgeHealthScanner-$version-portable-unsigned"
@@ -27,14 +28,15 @@ $zip=Join-Path $OutputDirectory ($stem+'.zip')
 if(Test-Path -LiteralPath $zip){Remove-Item -LiteralPath $zip}
 $archive=[IO.Compression.ZipFile]::Open($zip,[IO.Compression.ZipArchiveMode]::Create)
 try {foreach($name in 'HealthScan.exe','README.md','README.txt','LICENSE','PRIVACY.md','CODE-SIGNING.md','THIRD-PARTY-NOTICES.md'){
- [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,(Join-Path $root $name),$name,[IO.Compression.CompressionLevel]::Optimal)
+ $source=if($name -eq 'HealthScan.exe'){$exe}else{Join-Path $root $name}
+ [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,$source,$name,[IO.Compression.CompressionLevel]::Optimal)
 }}finally{$archive.Dispose()}
 $asm=[Reflection.Assembly]::Load([IO.File]::ReadAllBytes($exe))
 $components=@()
 foreach($ref in $asm.GetReferencedAssemblies()){
  $components+=@{type='library';'bom-ref'=('system:'+ $ref.Name);name=$ref.Name;version=$ref.Version.ToString();scope='required';properties=@(@{name='forge:distribution';value='Windows system prerequisite; not bundled'})}
 }
-foreach($name in 'Collect-Health.ps1','RegistryCleaner.ps1','index.html','build/HealthScan.cs','build/RegistryAtomic.cs','build/ForgeSplash.png'){
+foreach($name in 'build/NativeApp.cs','build/NativeTools.cs','build/NativeCollector.cs','build/NativeReports.cs','build/NativeCleanup.cs','build/RegistryAtomic.cs','build/Build-Native.ps1','build/ForgeSplash.png','build/HealthScan.ico'){
  $components+=@{type='file';'bom-ref'=('source:'+$name);name=$name;version=$version;licenses=@(@{license=@{id='MIT'}});hashes=@(@{alg='SHA-256';content=(Get-FileHash -LiteralPath (Join-Path $root $name) -Algorithm SHA256).Hash.ToLowerInvariant()})}
 }
 $sbom=[ordered]@{bomFormat='CycloneDX';specVersion='1.6';serialNumber=('urn:uuid:'+[guid]::NewGuid());version=1;metadata=@{timestamp=[DateTime]::UtcNow.ToString('o');component=@{type='application';'bom-ref'='ForgeHealthScanner';name='ForgeHealthScanner';version=$version;licenses=@(@{license=@{id='MIT'}});hashes=@(@{alg='SHA-256';content=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()})}};components=$components}

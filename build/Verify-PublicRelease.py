@@ -4,6 +4,9 @@ import hashlib
 import io
 import json
 import urllib.request
+import urllib.error
+import shutil
+import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -14,12 +17,25 @@ STEM = f'ForgeHealthScanner-{VERSION}-portable-unsigned'
 
 def get(url):
     request = urllib.request.Request(url, headers={'User-Agent': 'ForgeHealthScanner-release-verification'})
-    with urllib.request.urlopen(request, timeout=90) as response:
-        if response.status != 200:
+    try:
+        with urllib.request.urlopen(request, timeout=90) as response:
+            if response.status != 200:
+                raise ValueError(f'Expected HTTP 200: {url}')
+            data = response.read()
+    except urllib.error.HTTPError as error:
+        # Some GitHub pages intermittently return 5xx to urllib on Windows.
+        curl = shutil.which('curl')
+        if error.code < 500 or curl is None:
+            raise
+        result = subprocess.run(
+            [curl, '--fail', '--silent', '--show-error', '--location', '--retry', '2',
+             '--max-time', '90', '--write-out', '%{http_code}', url],
+            check=True, stdout=subprocess.PIPE)
+        if not result.stdout.endswith(b'200'):
             raise ValueError(f'Expected HTTP 200: {url}')
-        data = response.read()
-        print(f'HTTP 200 {url}')
-        return data
+        data = result.stdout[:-3]
+    print(f'HTTP 200 {url}')
+    return data
 
 for url in [BASE, BASE + '/releases/tag/v' + VERSION, BASE + '/actions',
             BASE + '/blob/main/LICENSE', BASE + '/blob/main/CODE-SIGNING.md',
@@ -31,7 +47,7 @@ for name, expected in manifest.items():
     actual = get(HOME + name)
     if hashlib.sha256(actual).hexdigest() != expected:
         raise ValueError(f'Deployed website bytes differ: {name}')
-if json.loads(get(HOME + 'site-sha256.json')) != manifest:
+if get(HOME + 'site-sha256.json') != (ROOT / 'site/site-sha256.json').read_bytes():
     raise ValueError('Deployed website manifest differs')
 
 download = BASE + '/releases/download/v' + VERSION + '/'

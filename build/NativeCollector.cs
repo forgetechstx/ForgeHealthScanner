@@ -328,8 +328,8 @@ internal static class NativeCollector
     static ScanCheck[] Battery()
     {
         if (Query(Cim, "SELECT DeviceID FROM Win32_Battery").Count == 0) return One("Battery health", "info", "Windows did not report a battery.");
-        var designs = Query(@"root\wmi", "SELECT InstanceName,Tag,DesignedCapacity,Capabilities FROM BatteryStaticData WHERE Active=TRUE");
-        var actual = Query(@"root\wmi", "SELECT InstanceName,Tag,FullChargedCapacity FROM BatteryFullChargedCapacity WHERE Active=TRUE");
+        var designs = Query(@"root\wmi", "SELECT * FROM BatteryStaticData WHERE Active=TRUE");
+        var actual = Query(@"root\wmi", "SELECT * FROM BatteryFullChargedCapacity WHERE Active=TRUE");
         if (designs.Count == 0) return Unknown("Battery health", "Windows did not return battery capacity.");
         return designs.Select((d, index) => {
             string name = "Battery health: Battery " + (index + 1);
@@ -338,7 +338,10 @@ internal static class NativeCollector
             var row = actual.Where(a => unique && string.Equals(Convert.ToString(a["InstanceName"]).Trim(), instance, StringComparison.OrdinalIgnoreCase)).ToArray();
             long design = Number(d["DesignedCapacity"]);
             long full = row.Length == 1 ? Number(row[0]["FullChargedCapacity"]) : 0;
-            bool capacityKnown = row.Length == 1 && object.Equals(d["Tag"], row[0]["Tag"]) && design > 0 && full > 0 && design < UInt32.MaxValue && full < UInt32.MaxValue
+            object designTag, chargeTag;
+            bool changed = row.Length == 1 && d.TryGetValue("Tag", out designTag) && row[0].TryGetValue("Tag", out chargeTag)
+                && designTag != null && chargeTag != null && !object.Equals(designTag, chargeTag);
+            bool capacityKnown = row.Length == 1 && !changed && design > 0 && full > 0 && design < UInt32.MaxValue && full < UInt32.MaxValue
                 && d["Capabilities"] != null && (Number(d["Capabilities"]) & 0x40000000) == 0;
             var check = Check(name, capacityKnown ? (full / (double)design < 0.80 ? "warning" : "pass") : "unknown",
                 capacityKnown ? (full / (double)design).ToString("P0") + " of design capacity." : "Battery capacity could not be verified.", "Review battery health with the manufacturer.");

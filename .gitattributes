@@ -11,9 +11,9 @@
 *.cmd  text eol=crlf
 *.exe  binary
 
-# Preserve exact published website and checksum bytes.
-site/** -text
 *.ico binary
 *.md text eol=lf
 *.yml text eol=lf
 *.json text eol=lf
+# Preserve the exact published bytes, including the website checksum manifest.
+site/** -text !eol
